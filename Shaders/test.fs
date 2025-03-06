@@ -4,14 +4,18 @@ vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }
 float sdSphere (vec3 p, float s) { return length(p) - s; }
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
-	float d0 = sdSphere(p + vec3(0, 0, 1), 1.5);
+	float d0 = sdSphere(p + vec3(0, 0, 1), 0.2);
    sdf = vec4(d0, vec3(1.0, 0.0, 0.0));
-	float d1 = sdSphere(p + vec3(0.5, 0, 1), 1.5);
-   sdf = opUnion(sdf, vec4(d1, vec3 (1.0, 0.0, 0.0 )));
+	float d1 = sdSphere(p + vec3(0.5, 0, 1), 0.1);
+   sdf = opUnion(sdf, vec4(d1, vec3(0, 0, 0)));
+	float d2 = sdSphere(p + vec3(-0.5, 0, 1), 0.1);
+   sdf = opUnion(sdf, vec4(d2, vec3(0, 0, 0)));
+	float d3 = sdSphere(p + vec3(-0.5, 0.5, 1), 0.1);
+   sdf = opUnion(sdf, vec4(d3, vec3(0, 0, 0)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
-vec4 raymarch(in vec3 ro, in vec3 rd) {
+vec4 raymarchV4(in vec3 ro, in vec3 rd) {
 	float t = 0.0;
 	for (int i = 0; i < 500; i++) {
 	vec3  rt = ro + rd*t;
@@ -30,8 +34,24 @@ vec4 raymarch(in vec3 ro, in vec3 rd) {
             	}
  }
 }
+float raymarch(in vec3 ro, in vec3 rd)  { return raymarchV4(ro, rd).x; }
+vec3 render(in vec3 ro, in vec3 rd)  {
+   vec3 col = vec3(0.0784314, 0.0784314, 0.0784314);
+   vec4  ray = raymarchV4(ro, rd);
+   float t = ray.x;
+   vec3 Cd = ray.yzw;
+   if (t > 0.0) {
+       col = Cd;
+   }
+   return col;
+}
 out vec4 FragColor;
 in vec2 pos;
 void main () {
-  FragColor = vec4(pos, 0.3f, 1.0f);
+   vec2 pXY = -vec2(pos.x, pos.y * 6.0/8.0); 
+   vec3 pix = vec3(pXY,    0.);
+   vec3 ro  = vec3(0,0., 3. );
+   vec3 rd  = normalize(pix - ro);
+   vec3 col = render(ro, rd);
+  FragColor = vec4(col, 1.0f);
 }

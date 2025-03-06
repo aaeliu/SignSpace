@@ -13,7 +13,7 @@ void printer::print_sdf_functions () {
 
 
 void printer::print_raymarch (int steps) {
-  file << "vec4 raymarch(in vec3 ro, in vec3 rd) {" << std::endl;
+  file << "vec4 raymarchV4(in vec3 ro, in vec3 rd) {" << std::endl;
   file << "\tfloat t = 0.0;" << std::endl;
   file << "\tfor (int i = 0; i < " << steps << "; i++) {" << std::endl;
   file << "\tvec3  rt = ro + rd*t;" << std::endl;
@@ -32,6 +32,8 @@ void printer::print_raymarch (int steps) {
             \t}" << std::endl;
   file << " }" << std::endl;
   file << "}" << std::endl;
+
+  file << "float raymarch(in vec3 ro, in vec3 rd)  { return raymarchV4(ro, rd).x; }" << std::endl;
 }
 
 
@@ -44,12 +46,11 @@ void printer::print_map() {
     int d = 0;
     for (auto &p : context->shapes) {
         p->print(file, d);
-        // file << "float d" << ++d << " = sdPenis" << std::endl;
         if (d > 0) {
-            file << "   sdf = opUnion(sdf, vec4(d" << d << ", vec3 (1.0, 0.0, 0.0 )));" << std::endl;
+            file << "   sdf = opUnion(sdf, vec4(d" << d << ", " << p->col->print() << "));" << std::endl;
         }
         else {
-            file << "   sdf = vec4(d" << d << ", vec3(1.0, 0.0, 0.0));" << std::endl;
+            file << "   sdf = vec4(d" << d << ", " << p->col->print() << ";" << std::endl;
         }
         d++;
     }
@@ -60,14 +61,31 @@ void printer::print_map() {
 }
 
 void printer::print_render() {
+    file << "vec3 render(in vec3 ro, in vec3 rd)  {" << std::endl;
+    file << "   vec3 col = " << context->background.print() << ";" << std::endl;
+    file << "   vec4  ray = raymarchV4(ro, rd);" << std::endl;
+    file << "   float t = ray.x;" << std::endl;
+    file << "   vec3 Cd = ray.yzw;" << std::endl;
+    file << "   if (t > 0.0) {" << std::endl;
 
+    // TODO: insert lighting / shadow equations here.
+
+    file << "       col = Cd;" << std::endl;
+    file << "   }" << std::endl;
+    file << "   return col;" << std::endl;
+    file << "}" << std::endl;
 }
 
 void printer::print_main() {
     file << "out vec4 FragColor;" << std::endl;
     file << "in vec2 pos;" << std::endl;
     file << "void main () {" << std::endl;
-    file << "  FragColor = vec4(pos, 0.3f, 1.0f);" << std::endl;
+    file << "   vec2 pXY = -vec2(pos.x, pos.y * 6.0/8.0); " << std::endl;
+    file << "   vec3 pix = vec3(pXY,    0.);" << std::endl;
+    file << "   vec3 ro  = vec3(0,0., 3. );" << std::endl;
+    file << "   vec3 rd  = normalize(pix - ro);" << std::endl;
+    file << "   vec3 col = render(ro, rd);" << std::endl;
+    file << "  FragColor = vec4(col, 1.0f);" << std::endl;
     file << "}" << std::endl;
 
 

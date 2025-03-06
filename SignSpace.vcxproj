@@ -137,6 +137,7 @@
     <ClCompile Include="src\primitives.cpp" />
     <ClCompile Include="src\printer.cpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\signspace.cpp" />
     <ClCompile Include="src\user.cpp" />
   </ItemGroup>
   <ItemGroup>

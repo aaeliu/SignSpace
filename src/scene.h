@@ -6,6 +6,7 @@
 
 struct scene {
 	std::vector<IR::primitive *> shapes;
-	color background;
+	Color background = Color (0, 0, 0);
+	std::shared_ptr <Color> current_color = std::make_shared <Color> (0, 0, 0);
 	scene ();
 };
