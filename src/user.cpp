@@ -18,9 +18,19 @@ void user::color(int r, int g, int b) {
 	context->current_color = std::make_shared<Color>(r, g, b);
 }
 
-IR::sphere* user::sphere(float x, float y, float z, float r) {
-	IR::sphere* s = new IR::sphere(x, y, -z, r);
+/* NOTE ON Z - COORDINATES!!
+* GLSL CODE HAS NEGATIVE-Z INTO THE SCREEN!
+* SIGNSPACE CODE HAS POSITIVE-Z INTO THE SCREEN! */
+
+std::shared_ptr<IR::primitive> user::sphere(float x, float y, float z, float r) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::sphere>(x, y, -z, r);
 	s->col = context->current_color;
 	context->shapes.push_back(s);
 	return s;
+}
+
+void user::directionalLight(float x, float y, float z, float i) {
+	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);
+	new_light->col = context->current_light_color;
+	context->lights.push_back(new_light);
 }

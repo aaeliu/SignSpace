@@ -4,5 +4,5 @@
 
 scene::scene() {
 	user* u = new user (this);
-	u->start ();
+	u->create ();
 }

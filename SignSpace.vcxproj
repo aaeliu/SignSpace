@@ -142,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\color.h" />
+    <ClInclude Include="src\light.h" />
     <ClInclude Include="src\primitives.h" />
     <ClInclude Include="src\printer.h" />
     <ClInclude Include="src\scene.h" />

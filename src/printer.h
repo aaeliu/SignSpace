@@ -15,6 +15,7 @@ struct printer {
   void print_sdf_functions ();
   void print_map();
   void print_raymarch (int steps);
+  void print_shadow_functions();
   void print_render ();
   void print_main ();
   void print ();

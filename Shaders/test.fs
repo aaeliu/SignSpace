@@ -15,6 +15,13 @@ vec4 mapV4(in vec3 p) {
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
+vec3 calcNormal( in vec3 pos ){
+        vec2 e = vec2(1.0, -1.0) * 0.5773 * 0.001;
+        return normalize(e.xyy * map(pos + e.xyy) +
+        e.yyx * map(pos + e.yyx) +
+        e.yxy * map(pos + e.yxy) +
+        e.xxx * map(pos + e.xxx)); 
+}
 vec4 raymarchV4(in vec3 ro, in vec3 rd) {
 	float t = 0.0;
 	for (int i = 0; i < 500; i++) {
@@ -35,13 +42,33 @@ vec4 raymarchV4(in vec3 ro, in vec3 rd) {
  }
 }
 float raymarch(in vec3 ro, in vec3 rd)  { return raymarchV4(ro, rd).x; }
+float shadow(in vec3 ro, in vec3 rd, float mint, float maxt) {
+        float t = mint;
+        for (int i = 0; i < 256 && t < maxt; i++)
+        {
+            float h = map(ro + rd * t);
+            if (h < 0.001)
+                return 0.0;
+            t += h;
+        }
+        return 1.0;
+    }
 vec3 render(in vec3 ro, in vec3 rd)  {
-   vec3 col = vec3(0.0784314, 0.0784314, 0.0784314);
+   vec3 col = vec3(0.0784314, 0.0196078, 0.0784314);
    vec4  ray = raymarchV4(ro, rd);
    float t = ray.x;
    vec3 Cd = ray.yzw;
    if (t > 0.0) {
-       col = Cd;
+       vec3 p = ro + rd * t;
+       vec3 N = calcNormal(p);
+       vec3 L, CL;
+       float LdotN, shadL;
+       col += 0.1 * Cd;
+	L = vec3(-0, 1, 1.4);
+	CL = 1 * vec3(1, 1, 1);
+	LdotN = clamp(dot(L, N), 0., 1.);
+	shadL = shadow(p, L, 0.01, 1.0);
+	col += Cd * CL * LdotN * shadL;
    }
    return col;
 }
@@ -49,7 +76,7 @@ out vec4 FragColor;
 in vec2 pos;
 void main () {
    vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); 
-   vec3 pix = vec3(pXY,    1.);
+   vec3 pix = vec3(pXY, 0.);
    vec3 ro  = vec3(0,0., 6. );
    vec3 rd  = normalize(pix - ro);
    vec3 col = render(ro, rd);

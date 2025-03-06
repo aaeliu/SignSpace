@@ -58,6 +58,29 @@ void printer::print_map() {
     file << "}" << std::endl;
 
     file << "float map(in vec3 p) { return mapV4(p).x; }" << std::endl;
+
+    file << "vec3 calcNormal( in vec3 pos ){\n\
+        vec2 e = vec2(1.0, -1.0) * 0.5773 * 0.001;\n\
+        return normalize(e.xyy * map(pos + e.xyy) +\n\
+        e.yyx * map(pos + e.yyx) +\n\
+        e.yxy * map(pos + e.yxy) +\n\
+        e.xxx * map(pos + e.xxx)); \n}" << std::endl;
+}
+
+/* These functions come from https://iquilezles.org/articles/rmshadows/
+*/
+void printer::print_shadow_functions() {
+    file << "float shadow(in vec3 ro, in vec3 rd, float mint, float maxt) {\n\
+        float t = mint;\n\
+        for (int i = 0; i < 256 && t < maxt; i++)\n\
+        {\n\
+            float h = map(ro + rd * t);\n\
+            if (h < 0.001)\n\
+                return 0.0;\n\
+            t += h;\n\
+        }\n\
+        return 1.0;\n\
+    }" << std::endl;
 }
 
 void printer::print_render() {
@@ -67,10 +90,17 @@ void printer::print_render() {
     file << "   float t = ray.x;" << std::endl;
     file << "   vec3 Cd = ray.yzw;" << std::endl;
     file << "   if (t > 0.0) {" << std::endl;
+    file << "       vec3 p = ro + rd * t;" << std::endl;
+    file << "       vec3 N = calcNormal(p);" << std::endl;
+    file << "       vec3 L, CL;" << std::endl;
+    file << "       float LdotN, shadL;" << std::endl;
 
     // TODO: insert lighting / shadow equations here.
+    file << "       col += " << context->ambient_factor << " * Cd;" << std::endl;
+    for (const auto& light : context->lights) {
+        light->print(file);
+    }
 
-    file << "       col = Cd;" << std::endl;
     file << "   }" << std::endl;
     file << "   return col;" << std::endl;
     file << "}" << std::endl;
@@ -98,6 +128,7 @@ void printer::print () {
     print_sdf_functions ();
     print_map();
     print_raymarch (500);
+    print_shadow_functions();
     print_render();
     print_main ();
 
