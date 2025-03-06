@@ -9,6 +9,7 @@ void printer::print_sdf_functions () {
   file << "float opUnion( float d1, float d2 ) {  return min(d1,d2); }" << std::endl;
   file << "vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }" << std::endl;
   file << "float sdSphere (vec3 p, float s) { return length(p) - s; }" << std::endl;
+  file << "float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}" << std::endl;
 }
 
 

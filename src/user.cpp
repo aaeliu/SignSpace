@@ -28,6 +28,12 @@ std::shared_ptr<IR::primitive> user::sphere(float x, float y, float z, float r) 
 	context->shapes.push_back(s);
 	return s;
 }
+std::shared_ptr<IR::primitive> user::box(float x, float y, float z, float l, float w, float h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::box>(x, y, -z, l, w, h);
+	s->col = context->current_color;
+	context->shapes.push_back(s);
+	return s;
+}
 
 void user::directionalLight(float x, float y, float z, float i) {
 	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);

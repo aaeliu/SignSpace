@@ -16,7 +16,7 @@ struct user {
 
 	// SHAPE PRIMITIVES
 	std::shared_ptr<IR::primitive> sphere(float x, float y, float z, float r);
-
+	std::shared_ptr<IR::primitive> box(float x, float y, float z, float l, float w, float h);
 	std::shared_ptr<IR::primitive> smoothCombine(std::shared_ptr<IR::primitive> p1,
 												 std::shared_ptr<IR::primitive> p2);
 

@@ -4,7 +4,16 @@
 #include "light.h"
 
 int IR::sphere::print(std::ofstream& f, int d) const {
-	f << "	float d" << d << " = sdSphere(p - vec3(" << x << ", " << y << ", " << z << "), " << r << ");" << std::endl;
+	f << "	float d" << d << " = sdSphere(p - " << print_center () << ", " << r << ");" << std::endl;
+	return d;
+}
+
+int IR::box::print(std::ofstream& f, int d) const {
+	f << "	float d" << d << " = sdBox(p - " << print_center() << ", " << print_vec3 (l, w, h) << ");" << std::endl;
+	return d;
+}
+
+int IR::smooth_union::print(std::ofstream& f, int d) const {
 	return d;
 }
 
