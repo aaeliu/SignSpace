@@ -50,7 +50,7 @@ void printer::print_map() {
             file << "   sdf = opUnion(sdf, vec4(d" << d << ", " << p->col->print() << "));" << std::endl;
         }
         else {
-            file << "   sdf = vec4(d" << d << ", " << p->col->print() << ";" << std::endl;
+            file << "   sdf = vec4(d" << d << ", " << p->col->print() << ");" << std::endl;
         }
         d++;
     }
@@ -80,9 +80,9 @@ void printer::print_main() {
     file << "out vec4 FragColor;" << std::endl;
     file << "in vec2 pos;" << std::endl;
     file << "void main () {" << std::endl;
-    file << "   vec2 pXY = -vec2(pos.x, pos.y * 6.0/8.0); " << std::endl;
-    file << "   vec3 pix = vec3(pXY,    0.);" << std::endl;
-    file << "   vec3 ro  = vec3(0,0., 3. );" << std::endl;
+    file << "   vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); " << std::endl;
+    file << "   vec3 pix = vec3(pXY, 0.);" << std::endl;
+    file << "   vec3 ro  = vec3(0,0., 6. );" << std::endl;
     file << "   vec3 rd  = normalize(pix - ro);" << std::endl;
     file << "   vec3 col = render(ro, rd);" << std::endl;
     file << "  FragColor = vec4(col, 1.0f);" << std::endl;

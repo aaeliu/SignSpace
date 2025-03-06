@@ -19,7 +19,7 @@ void user::color(int r, int g, int b) {
 }
 
 IR::sphere* user::sphere(float x, float y, float z, float r) {
-	IR::sphere* s = new IR::sphere(x, y, z, r);
+	IR::sphere* s = new IR::sphere(x, y, -z, r);
 	s->col = context->current_color;
 	context->shapes.push_back(s);
 	return s;

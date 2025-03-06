@@ -14,7 +14,8 @@ struct user {
 	void color (int r, int g, int b);
 	IR::sphere* sphere(float x, float y, float z, float r);
 
-	void smoothCombine(IR::primitive* p1, IR::primitive* p2);
+	void smoothCombine(std::shared_ptr<IR::primitive> p1, 
+						std::shared_ptr<IR::primitive> p2);
 
 
 	// COLOR VARIABLES
