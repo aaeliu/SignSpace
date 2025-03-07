@@ -5,6 +5,10 @@ printer::printer (std::string filename, scene* c) {
   context = c;
 }
 
+void printer::print_uniforms() {
+    file << "uniform vec3 camTransform;" << std::endl;
+}
+
 void printer::print_sdf_functions () {
   file << "float opUnion( float d1, float d2 ) {  return min(d1,d2); }" << std::endl;
   file << "vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }" << std::endl;
@@ -114,8 +118,8 @@ void printer::print_main() {
     file << "in vec2 pos;" << std::endl;
     file << "void main () {" << std::endl;
     file << "   vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); " << std::endl;
-    file << "   vec3 pix = vec3(pXY, 0.);" << std::endl;
-    file << "   vec3 ro  = vec3(0,0., 6. );" << std::endl;
+    file << "   vec3 pix = vec3(pXY.x, pXY.y, 0.) + camTransform;" << std::endl;
+    file << "   vec3 ro  = vec3(0.,0., 6. ) + camTransform;" << std::endl;
     file << "   vec3 rd  = normalize(pix - ro);" << std::endl;
     file << "   vec3 col = render(ro, rd);" << std::endl;
     file << "  FragColor = vec4(col, 1.0f);" << std::endl;
@@ -128,6 +132,7 @@ void printer::print () {
   if (file.is_open ()) {
     file << "#version 330 core" << std::endl;
 
+    print_uniforms();
     print_sdf_functions ();
     print_map();
     print_raymarch (500);

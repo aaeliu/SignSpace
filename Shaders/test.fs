@@ -1,4 +1,5 @@
 #version 330 core
+uniform vec3 camTransform;
 float opUnion( float d1, float d2 ) {  return min(d1,d2); }
 vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }
 float sdSphere (vec3 p, float s) { return length(p) - s; }
@@ -93,8 +94,8 @@ out vec4 FragColor;
 in vec2 pos;
 void main () {
    vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); 
-   vec3 pix = vec3(pXY, 0.);
-   vec3 ro  = vec3(0,0., 6. );
+   vec3 pix = vec3(pXY.x, pXY.y, 0.) + camTransform;
+   vec3 ro  = vec3(0.,0., 6. ) + camTransform;
    vec3 rd  = normalize(pix - ro);
    vec3 col = render(ro, rd);
   FragColor = vec4(col, 1.0f);

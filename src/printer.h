@@ -12,6 +12,7 @@ struct printer {
 
   printer (std::string filename, scene* c);
 
+  void print_uniforms();
   void print_sdf_functions ();
   void print_map();
   void print_raymarch (int steps);

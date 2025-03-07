@@ -25,6 +25,8 @@ void main()\n\
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+float cam_x, cam_y, cam_z;
+
 int main () {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -157,9 +159,15 @@ int main () {
 	// Simple render loop. 
 	while (!glfwWindowShouldClose(window))
 	{
+		processInput(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glUseProgram(shaderProgram);
+
+		// Pass in uniform variables.
+		GLint camTransformLocation = glGetUniformLocation(shaderProgram, "camTransform");
+		glUniform3f(camTransformLocation, cam_x, cam_y, cam_z);
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
@@ -168,4 +176,26 @@ int main () {
 	}
 	glfwTerminate();
 	return 0;
+}
+
+void processInput(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		cam_z -= 0.01;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		cam_z += 0.01;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		cam_x += 0.005;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		cam_x -= 0.005;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		cam_y += 0.005;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		cam_y -= 0.005;
+	}
+
 }
