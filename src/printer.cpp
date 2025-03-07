@@ -10,6 +10,7 @@ void printer::print_sdf_functions () {
   file << "vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }" << std::endl;
   file << "float sdSphere (vec3 p, float s) { return length(p) - s; }" << std::endl;
   file << "float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}" << std::endl;
+  file << "float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }" << std::endl;
 }
 
 
@@ -46,8 +47,9 @@ void printer::print_map() {
     file << "   vec4 sdf = vec4 (0., 0., 0., 0.);" << std::endl;
     int d = 0;
     for (auto &p : context->shapes) {
-        p->print(file, d);
+        d = p->print(file, d);
         if (d > 0) {
+            // union operation is implicit when there are multiple shapes in the scene.
             file << "   sdf = opUnion(sdf, vec4(d" << d << ", " << p->col->print() << "));" << std::endl;
         }
         else {

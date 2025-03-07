@@ -14,7 +14,12 @@ int IR::box::print(std::ofstream& f, int d) const {
 }
 
 int IR::smooth_union::print(std::ofstream& f, int d) const {
-	return d;
+	int d0 = shape_1->print(f, d);
+	int d1 = shape_2->print(f, d0 + 1);
+	int d2 = d1 + 1;
+	f << "	float d" << d2 << " = opSmoothUnion(d" << d0 << ", d" << d1 << ", 0.1);" << std::endl;
+
+	return d2;
 }
 
 int IR::directional_light::print(std::ofstream& f) const {
@@ -27,3 +32,4 @@ int IR::directional_light::print(std::ofstream& f) const {
 	return 1;
 
 }
+
