@@ -2,12 +2,14 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <vector>
 #include "color.h"
 
 
 namespace IR {
 	struct primitive {
 		float x, y, z;
+		float rot_x, rot_y, rot_z;
 		primitive(float x_, float y_, float z_): x(x_), y(y_), z(z_) {};
 		primitive() = default;
 		virtual ~primitive() = default;
@@ -40,13 +42,12 @@ namespace IR {
 		int print(std::ofstream& f, int n) const override;
 	};
 
-	struct smooth_union : public primitive {
-		std::shared_ptr<primitive> shape_1;
-		std::shared_ptr<primitive> shape_2;
-		smooth_union(std::shared_ptr<primitive> p1, std::shared_ptr<primitive> p2) {
-			shape_1 = p1;
-			shape_2 = p2;
-		};
+	struct combination : public primitive {
+		std::vector <std::shared_ptr<primitive>> shapes;
+	};
+
+	struct smooth_union : public combination {
+		smooth_union() { }
 		int print(std::ofstream& f, int n) const override;
 	};
 }

@@ -5,6 +5,7 @@ vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }
 float sdSphere (vec3 p, float s) { return length(p) - s; }
 float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}
 float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }
+vec3 rotate_z(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, -sa, +.0, +sa, +ca, 0., +.0, +.0, 1.); }
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
 	float d0 = sdSphere(p - vec3(0, 0, -1), 0.2);
@@ -13,18 +14,20 @@ vec4 mapV4(in vec3 p) {
    sdf = opUnion(sdf, vec4(d1, vec3(1, 0, 0)));
 	float d2 = sdSphere(p - vec3(-0.5, 0, -1), 0.1);
    sdf = opUnion(sdf, vec4(d2, vec3(0, 1, 0)));
-	float d3 = sdBox(p - vec3(-1, -0.25, -2), vec3(0.3, 0.2, 0.1));
+	float d3 = sdBox(rotate_z(p - vec3(-1, -0.25, -2),0.785398), vec3(0.3, 0.2, 0.1)); 
    sdf = opUnion(sdf, vec4(d3, vec3(1, 1, 0)));
 	float d4 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
    sdf = opUnion(sdf, vec4(d4, vec3(0, 0, 1)));
 	float d5 = sdSphere(p - vec3(-0, -0.4, -0.25), 0.3);
    sdf = opUnion(sdf, vec4(d5, vec3(0, 0, 1)));
-	float d6 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.2, 0.2, 0.2));
+	float d6 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
 	float d7 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
-	float d8 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
-	float d9 = opSmoothUnion(d7, d8, 0.1);
-	float d10 = opSmoothUnion(d6, d9, 0.1);
-   sdf = opUnion(sdf, vec4(d10, vec3(0, 1, 1)));
+	float d8 = opSmoothUnion(d6, d7, 0.2);
+	float d9 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
+	float d10 = opSmoothUnion(d8, d9, 0.2);
+	float d11 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
+	float d12 = opSmoothUnion(d10, d11, 0.2);
+   sdf = opUnion(sdf, vec4(d12, vec3(0, 1, 1)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
