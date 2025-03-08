@@ -42,12 +42,31 @@ namespace IR {
 		int print(std::ofstream& f, int n) const override;
 	};
 
+	enum comb_type{
+		SMOOTH_UNION,
+		SUBTRACTION,
+		SMOOTH_SUBRACTION,
+		INTERSECTION,
+		SMOOTH_INTERSECTION
+	};
+
 	struct combination : public primitive {
 		std::vector <std::shared_ptr<primitive>> shapes;
+		combination() = default;
+		virtual ~combination() = default;
+		virtual comb_type get_comb_type() const = 0;
 	};
 
 	struct smooth_union : public combination {
 		smooth_union() { }
+		comb_type get_comb_type() const override  { return comb_type::SMOOTH_UNION; }
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	// if we have subtraction on a, b, c, d, e... result is a - b - c - d - e
+	struct subtraction : public combination {
+		subtraction() {}
+		comb_type get_comb_type() const override { return comb_type::SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
 	};
 }

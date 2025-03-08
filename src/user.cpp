@@ -1,5 +1,6 @@
 #include "primitives.h"
 #include "user.h"
+#include <cassert>
 # define M_PI           3.14159265358979323846
 
 user::user(scene* c) {
@@ -28,8 +29,8 @@ void user::color(int r, int g, int b) {
 void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	s->col = context->current_color;
 	s->rot_z = current_rot_z;
-	if (!smooth_union_stack.empty()) {
-		smooth_union_stack.top()->shapes.push_back(s);
+	if (!combination_stack.empty()) {
+		combination_stack.top()->shapes.push_back(s);
 	}
 	else {
 		objects_temp.push_back(s);
@@ -55,18 +56,30 @@ std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> 
 	return smoothUnion(smoothUnion(p1, p2), rest);
 }*/
 
-std::shared_ptr <IR::smooth_union> user::smoothUnionBegin() {
-	smooth_union_stack.push(std::make_shared<IR::smooth_union>());
-	std::shared_ptr<IR::smooth_union> s = smooth_union_stack.top();
-	s->col = context->current_color;
-	s->rot_z = current_rot_z;
-	objects_temp.push_back(s);
+std::shared_ptr <IR::combination> user::smoothUnionBegin() {
+	std::shared_ptr<IR::combination> s = std::make_shared<IR::smooth_union>();
+	_default_prim_construct(s);
+	combination_stack.push(s);
 	return s;
 }
 
 void user::smoothUnionEnd() {
-	std::shared_ptr<IR::smooth_union> s = smooth_union_stack.top();
-	smooth_union_stack.pop();
+	std::shared_ptr<IR::combination> s = combination_stack.top();
+	assert(s->get_comb_type() == IR::comb_type::SMOOTH_UNION);
+	combination_stack.pop();
+}
+
+std::shared_ptr <IR::combination> user::subtractionBegin(void) {
+	std::shared_ptr<IR::combination> s = std::make_shared<IR::subtraction>();
+	_default_prim_construct(s);
+	combination_stack.push(s);
+	return s;
+}
+
+void user::subtractionEnd(void) {
+	std::shared_ptr<IR::combination> s = combination_stack.top();
+	assert(s->get_comb_type() == IR::comb_type::SUBTRACTION);
+	combination_stack.pop();
 }
 
 /*

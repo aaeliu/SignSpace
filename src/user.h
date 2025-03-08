@@ -38,14 +38,14 @@ struct user {
 	std::shared_ptr<IR::primitive> smoothSubtract(std::shared_ptr<IR::primitive> p1,
 												 std::shared_ptr<IR::primitive> p2);*/ 
 
-	std::stack<std::shared_ptr <IR::smooth_union>> smooth_union_stack;
-	std::shared_ptr <IR::smooth_union> smoothUnionBegin(void);
+	std::stack<std::shared_ptr <IR::combination>> combination_stack;
+	std::shared_ptr <IR::combination> smoothUnionBegin(void);
 	void smoothUnionEnd(void);
 
-	std::shared_ptr <IR::smooth_union> subtractionBegin(void);
+	std::shared_ptr <IR::combination> subtractionBegin(void);
 	void subtractionEnd(void);
 
-	std::shared_ptr <IR::smooth_union> smoothSubtractionBegin(void);
+	std::shared_ptr <IR::combination> smoothSubtractionBegin(void);
 	void smoothSubtractionEnd(void);
 
 	// TRANSLATIONAL OPERATORS

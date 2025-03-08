@@ -7,7 +7,10 @@ void user::create() {
 	directionalLight(0.3, -1, 0, 0.3);
 
 	color (255, 0, 0);
-	sphere (0., 0., 1.0, 0.2);
+	subtractionBegin();
+		sphere (0., 0., 1.0, 0.2);
+		box(0.15, 0., 1.0, 0.08, 0.1, 0.2);
+	subtractionEnd();
 	sphere (0.4, 0., 1.0, 0.1);
 
 	color (0, 255, 0);
@@ -15,7 +18,7 @@ void user::create() {
 
 	color(255, 255, 0);
 	rotateZ(45);
-	box(-1, -0.25, 2.0, 0.3, 0.2, 0.1);
+	box(-1, -0.25, 2.0, 0.3, 0.2, 2.0);
 
 	rotateZ(0);
 	color (0, 0, 255);
@@ -27,12 +30,16 @@ void user::create() {
 
 
 	rotateZ(45);
-	smoothUnionBegin();
-		box(0.4, 0.5, 1.5, 0.2, 0.2, 0.2);
-		sphere(0.5, 0.2, 1.5, 0.3);
-		sphere(0.8, 0.3, 1.5, 0.1);
-		sphere(0.3, 0.8, 1.5, 0.3);
-	smoothUnionEnd(); 
+	subtractionBegin();
+		smoothUnionBegin();
+			box(0.4, 0.5, 1.5, 0.2, 0.2, 0.2);
+			sphere(0.5, 0.2, 1.5, 0.3);
+			sphere(0.8, 0.3, 1.5, 0.1);
+			sphere(0.3, 0.8, 1.5, 0.3);
+		smoothUnionEnd(); 
+		rotateZ(0);
+		box(0.4, 0.5, 1.5, 0.1, 0.1, 2.0);
+	subtractionEnd();
 	
 	
 
