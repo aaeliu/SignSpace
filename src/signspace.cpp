@@ -18,8 +18,10 @@ void user::create() {
 
 	color(255, 255, 0);
 	rotateZ(45);
-	box(-1, -0.25, 2.0, 0.3, 0.2, 2.0);
+	rotateY(45);
+	box(-1, -0.25, 2.0, 0.3, 0.2, 0.5);
 
+	rotateY(0);
 	rotateZ(0);
 	color (0, 0, 255);
 	sphere (-0.5, 0.25, 1.0, 0.1);
@@ -37,8 +39,14 @@ void user::create() {
 			sphere(0.8, 0.3, 1.5, 0.1);
 			sphere(0.3, 0.8, 1.5, 0.3);
 		smoothUnionEnd(); 
+		
+		smoothUnionBegin();
 		rotateZ(0);
 		box(0.4, 0.5, 1.5, 0.1, 0.1, 2.0);
+		rotateZ(30);
+		box(0.4, 0.5, 1.5, 0.1, 0.1, 2.0);
+		smoothUnionEnd();
+		box(0.3, 0.8, 1.5, 0.2, 0.2, 0.5);
 	subtractionEnd();
 	
 	

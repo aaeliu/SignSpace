@@ -9,7 +9,7 @@
 namespace IR {
 	struct primitive {
 		float x, y, z;
-		float rot_x, rot_y, rot_z;
+		float rot_x =0, rot_y=0, rot_z=0;
 		primitive(float x_, float y_, float z_): x(x_), y(y_), z(z_) {};
 		primitive() = default;
 		virtual ~primitive() = default;
@@ -25,6 +25,7 @@ namespace IR {
 		std::string print_center() const {
 			return print_vec3(x, y, z);
 		}
+		std::string print_center_with_rotations() const;
 
 	};
 
@@ -58,6 +59,7 @@ namespace IR {
 	};
 
 	struct smooth_union : public combination {
+		float blend_factor = 0.25;
 		smooth_union() { }
 		comb_type get_comb_type() const override  { return comb_type::SMOOTH_UNION; }
 		int print(std::ofstream& f, int n) const override;

@@ -7,6 +7,11 @@ user::user(scene* c) {
 	context = c;
 }
 
+void user::create_and_check() {
+	create();
+	assert(combination_stack.empty());
+}
+
 void user::background(int g) {
 	background(g, g, g);
 }
@@ -28,6 +33,8 @@ void user::color(int r, int g, int b) {
 /* applies state settings to newly constructed primitive... */
 void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	s->col = context->current_color;
+	s->rot_x = current_rot_x;
+	s->rot_y = current_rot_y;
 	s->rot_z = current_rot_z;
 	if (!combination_stack.empty()) {
 		combination_stack.top()->shapes.push_back(s);
@@ -56,10 +63,16 @@ std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> 
 	return smoothUnion(smoothUnion(p1, p2), rest);
 }*/
 
+void user::smoothBlendFactor(float k) {
+	current_blend_factor = k;
+}
+
 std::shared_ptr <IR::combination> user::smoothUnionBegin() {
-	std::shared_ptr<IR::combination> s = std::make_shared<IR::smooth_union>();
+	std::shared_ptr<IR::smooth_union> s = std::make_shared<IR::smooth_union>();
 	_default_prim_construct(s);
+	s->blend_factor = current_blend_factor;
 	combination_stack.push(s);
+
 	return s;
 }
 
@@ -103,6 +116,15 @@ void user::directionalLight(float x, float y, float z, float i) {
 	context->lights.push_back(new_light);
 }
 
+void user::rotateX(float degs) {
+	current_rot_x = degs * M_PI / 180.f;
+}
+void user::rotateY(float degs) {
+	current_rot_y = degs * M_PI / 180.f;
+}
 void user::rotateZ(float degs) {
 	current_rot_z = degs * M_PI / 180.f;
+}
+void user::rotate(float degs_x, float degs_y, float degs_z) {
+	rotateX(degs_x); rotateY(degs_y); rotateZ(degs_z);
 }

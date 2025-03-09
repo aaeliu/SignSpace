@@ -6,18 +6,22 @@ float sdSphere (vec3 p, float s) { return length(p) - s; }
 float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}
 float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }
 float opSubtraction( float d1, float d2 ) { return max(d1,-d2); }
+float opSmoothSubtraction( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0); return mix(d2, -d1, h) + k * h * (1.0 - h); }
+float opIntersection( float d1, float d2 ) { return max(d1, d2); }
+vec3 rotate_x(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +1.0, +.0, +.0, +.0, +ca, -sa, +.0, +sa, +ca); }
+vec3 rotate_y(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, +.0, -sa, +.0, +1.0, +.0, +sa, +.0, +ca); }
 vec3 rotate_z(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, -sa, +.0, +sa, +ca, 0., +.0, +.0, 1.); }
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
 	float d0 = sdSphere(p - vec3(0, 0, -1), 0.2);
-	float d1 = sdBox(p - vec3(0.15, 0, -1), vec3(0.08, 0.1, 0.2));
+	float d1 = sdBox(p - vec3(0.15, 0, -1), vec3(0.08, 0.1, 0.2)); 
 	float d2 = opSubtraction(d0, d1);
    sdf = vec4(d2, vec3(1, 0, 0));
 	float d3 = sdSphere(p - vec3(0.4, 0, -1), 0.1);
    sdf = opUnion(sdf, vec4(d3, vec3(1, 0, 0)));
 	float d4 = sdSphere(p - vec3(-0.5, 0, -1), 0.1);
    sdf = opUnion(sdf, vec4(d4, vec3(0, 1, 0)));
-	float d5 = sdBox(rotate_z(p - vec3(-1, -0.25, -2),0.785398), vec3(0.3, 0.2, 2)); 
+	float d5 = sdBox(rotate_y(rotate_z(p - vec3(-1, -0.25, -2),0.785398),0.785398), vec3(0.3, 0.2, 0.5)); 
    sdf = opUnion(sdf, vec4(d5, vec3(1, 1, 0)));
 	float d6 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
    sdf = opUnion(sdf, vec4(d6, vec3(0, 0, 1)));
@@ -25,14 +29,18 @@ vec4 mapV4(in vec3 p) {
    sdf = opUnion(sdf, vec4(d7, vec3(0, 0, 1)));
 	float d8 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
 	float d9 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
-	float d10 = opSmoothUnion(d8, d9, 0.2);
+	float d10 = opSmoothUnion(d8, d9,0.25); 
 	float d11 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
-	float d12 = opSmoothUnion(d10, d11, 0.2);
+	float d12 = opSmoothUnion(d10, d11,0.25); 
 	float d13 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
-	float d14 = opSmoothUnion(d12, d13, 0.2);
-	float d15 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2));
-	float d16 = opSubtraction(d14, d15);
-   sdf = opUnion(sdf, vec4(d16, vec3(0, 1, 1)));
+	float d14 = opSmoothUnion(d12, d13,0.25); 
+	float d15 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
+	float d16 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
+	float d17 = opSmoothUnion(d15, d16,0.25); 
+	float d18 = opSubtraction(d14, d17);
+	float d19 = sdBox(rotate_z(p - vec3(0.3, 0.8, -1.5),0.523599), vec3(0.2, 0.2, 0.5)); 
+	float d20 = opSubtraction(d18, d19);
+   sdf = opUnion(sdf, vec4(d20, vec3(0, 1, 1)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }

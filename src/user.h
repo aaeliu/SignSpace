@@ -5,12 +5,14 @@
 struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;
+	float current_blend_factor = 0.25f;
 	user(scene* c);
 
 	float current_rot_x = 0.0f;
 	float current_rot_y = 0.0f;
 	float current_rot_z = 0.0f;
 
+	void create_and_check();
 	void create();
 
 	void background(int g);
@@ -24,7 +26,10 @@ struct user {
 
 	// SHAPE PRIMITIVES
 	std::shared_ptr<IR::primitive> sphere(float x, float y, float z, float r);
-	std::shared_ptr<IR::primitive> box(float x, float y, float z, float l, float w, float h);
+	std::shared_ptr<IR::primitive> box (float x, float y, float z, float l, float w, float h);
+	std::shared_ptr<IR::primitive> cone (float x, float y, float z, float r, float h);
+	std::shared_ptr<IR::primitive> torus (float x, float y, float z, float t);
+
 
 
 	// Deprecated operators... 
@@ -39,6 +44,7 @@ struct user {
 												 std::shared_ptr<IR::primitive> p2);*/ 
 
 	std::stack<std::shared_ptr <IR::combination>> combination_stack;
+	void smoothBlendFactor(float k);
 	std::shared_ptr <IR::combination> smoothUnionBegin(void);
 	void smoothUnionEnd(void);
 

@@ -4,17 +4,27 @@
 #include "light.h"
 
 int IR::sphere::print(std::ofstream& f, int d) const {
+	// note: there is no point in rotating a sphere. like, cause like yknow it's like yknow like yknow???
 	f << "	float d" << d << " = sdSphere(p - " << print_center () << ", " << r << ");" << std::endl;
 	return d;
 }
 
-int IR::box::print(std::ofstream& f, int d) const {
+std::string IR::primitive::print_center_with_rotations() const {
+	std::string c = "p - " + print_center();
 	if (rot_z != 0) {
-		// f << "	float d" << d << " = sdBox(rotate_z(p, " << rot_z << ") - " << print_center() << ", " << print_vec3(l, w, h) << "); " << std::endl;
-		f << "	float d" << d << " = sdBox(rotate_z(p - " << print_center() << "," << rot_z << "), " << print_vec3(l, w, h) << "); " << std::endl;
-		return d;
+		c = "rotate_z(" + c + "," + std::to_string(rot_z) + ")";
 	}
-	f << "	float d" << d << " = sdBox(p - " << print_center() << ", " << print_vec3 (l, w, h) << ");" << std::endl;
+	if (rot_y != 0) {
+		c = "rotate_y(" + c + "," + std::to_string(rot_y) + ")";
+	}
+	if (rot_x != 0) {
+		c = "rotate_x(" + c + "," + std::to_string(rot_x) + ")";
+	}
+	return c;
+}
+
+int IR::box::print(std::ofstream& f, int d) const {
+	f << "	float d" << d << " = sdBox(" << print_center_with_rotations () << ", " << print_vec3(l, w, h) << "); " << std::endl;
 	return d;
 }
 
@@ -27,7 +37,7 @@ int IR::smooth_union::print(std::ofstream& f, int d) const {
 		d1 = shape->print(f, d0 + 1);
 		d2 = d1 + 1;
 
-		f << "	float d" << d2 << " = opSmoothUnion(d" << d0 << ", d" << d1 << ", 0.2);" << std::endl;
+		f << "	float d" << d2 << " = opSmoothUnion(d" << d0 << ", d" << d1 << "," << blend_factor << "); " << std::endl;
 		d0 = d2;
 	}
 	return d2;

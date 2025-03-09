@@ -4,7 +4,7 @@
 
 scene::scene() {
 	user* u = new user (this);
-	u->create ();
+	u->create_and_check ();
 	for (auto p : u->objects_temp) {
 		if (!p->to_combine)
 			shapes.push_back(p);
