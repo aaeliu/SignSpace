@@ -17,36 +17,22 @@ vec3 rotate_y(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle
 vec3 rotate_z(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, -sa, +.0, +sa, +ca, 0., +.0, +.0, 1.); }
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
-	float d0 = sdSphere(p - vec3(0, 0, -1), 0.2);
-	float d1 = sdBox(p - vec3(0.15, 0, -1), vec3(0.08, 0.1, 0.2)); 
-	float d2 = opSubtraction(d0, d1);
-   sdf = vec4(d2, vec3(1, 0, 0));
-	float d3 = sdSphere(p - vec3(0.4, 0, -1), 0.1);
-   sdf = opUnion(sdf, vec4(d3, vec3(1, 0, 0)));
-	float d4 = sdSphere(p - vec3(-0.5, 0, -1), 0.1);
-   sdf = opUnion(sdf, vec4(d4, vec3(0, 1, 0)));
-	float d5 = sdCone(p - vec3(-0.5, 0.5, -1), 0.2, 0.6); 
-   sdf = opUnion(sdf, vec4(d5, vec3(0, 1, 0)));
-	float d6 = sdBox(rotate_y(p - vec3(-1, -0.25, -2),0.785398), vec3(0.3, 0.2, 0.5)); 
-   sdf = opUnion(sdf, vec4(d6, vec3(1, 1, 0)));
-	float d7 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
-   sdf = opUnion(sdf, vec4(d7, vec3(0, 0, 1)));
-	float d8 = sdSphere(p - vec3(-0, -0.4, -0.25), 0.3);
-   sdf = opUnion(sdf, vec4(d8, vec3(0, 0, 1)));
-	float d9 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
-	float d10 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
-	float d11 = opSmoothUnion(d9, d10,0.1); 
-	float d12 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
-	float d13 = opSmoothUnion(d11, d12,0.1); 
-	float d14 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
-	float d15 = opSmoothUnion(d13, d14,0.1); 
-	float d16 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
-	float d17 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
-	float d18 = opSmoothUnion(d16, d17,0.1); 
-	float d19 = opSmoothSubtraction(d15, d18,0.1); 
-	float d20 = sdBox(rotate_z(p - vec3(0.3, 0.8, -1.5),0.523599), vec3(0.2, 0.2, 0.5)); 
-	float d21 = opSmoothSubtraction(d19, d20,0.1); 
-   sdf = opUnion(sdf, vec4(d21, vec3(0, 1, 1)));
+   vec4 sdf_ = vec4 (0., 0., 0., 0.);
+	float d0 = sdSphere(p - vec3(0, 1, -1), 0.2);
+   sdf_ = vec4(d0, vec3(1, 0, 0));
+	float d1 = sdCylinder(p - vec3(0, 0.4, -1), 0.4, 0.1); 
+	sdf_  = opUnion(sdf_, vec4(d1, vec3(1, 1, 0))); 
+   sdf = sdf_;
+	float d2 = sdSphere(p - vec3(1, 1, -1), 0.2);
+   sdf_ = vec4(d2, vec3(1, 0, 0));
+	float d3 = sdCylinder(p - vec3(1, 0.4, -1), 0.4, 0.1); 
+	sdf_  = opUnion(sdf_, vec4(d3, vec3(1, 1, 0))); 
+   sdf = opUnion(sdf, sdf_);
+	float d4 = sdSphere(p - vec3(2, 1, -1), 0.2);
+   sdf_ = vec4(d4, vec3(1, 0, 0));
+	float d5 = sdCylinder(p - vec3(2, 0.4, -1), 0.4, 0.1); 
+	sdf_  = opUnion(sdf_, vec4(d5, vec3(1, 1, 0))); 
+   sdf = opUnion(sdf, sdf_);
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
@@ -103,22 +89,6 @@ vec3 render(in vec3 ro, in vec3 rd)  {
 	CL = 1 * vec3(1, 1, 1);
 	LdotN = clamp(dot(L, N), 0., 1.);
 	shadL = shadow(p, L, 0.01, 1.0);
-	col += Cd * CL * LdotN * shadL;
-	distL = vec3(-0.5, -1, -1) - p;
-	L = normalize ( distL );
-	shadL = shadow(p, L, 0.01, length(distL));
-	falloffL = dot(distL, distL);
-	falloffL *= falloffL; 
-	CL = 1 * vec3(1, 1, 0)/falloffL;
-	LdotN = clamp(dot(L, N), 0., 1.);
-	col += Cd * CL * LdotN * shadL;
-	distL = vec3(1.5, -1, -1) - p;
-	L = normalize ( distL );
-	shadL = shadow(p, L, 0.01, length(distL));
-	falloffL = dot(distL, distL);
-	falloffL *= falloffL; 
-	CL = 1 * vec3(1, 0, 1)/falloffL;
-	LdotN = clamp(dot(L, N), 0., 1.);
 	col += Cd * CL * LdotN * shadL;
    }
    return col;

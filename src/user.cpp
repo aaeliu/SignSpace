@@ -44,7 +44,9 @@ void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	if (!combination_stack.empty()) {
 		combination_stack.top()->shapes.push_back(s);
 	}
-	else {
+	else if (current_custom_shape != nullptr) {
+		current_custom_shape->push_back(s);
+	} else {
 		objects_temp.push_back(s);
 	}
 }
@@ -163,6 +165,7 @@ void user::smoothIntersectionEnd(void) {
 	combination_stack.pop();
 }
 
+// LIGHTSSS
 
 void user::directionalLight(float x, float y, float z, float i) {
 	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);
@@ -176,6 +179,8 @@ void user::pointLight(float x, float y, float z, float i) {
 	context->lights.push_back(new_light);
 }
 
+// TRANSFORMATIONAL 
+
 void user::rotateX(float degs) {
 	current_rot_x = degs * M_PI / 180.f;
 }
@@ -187,4 +192,27 @@ void user::rotateZ(float degs) {
 }
 void user::rotate(float degs_x, float degs_y, float degs_z) {
 	rotateX(degs_x); rotateY(degs_y); rotateZ(degs_z);
+}
+
+// CUSTOM SHAPE CREATION!
+std::shared_ptr<IR::primitive> user::shape(const std::string& name, float x, float y, float z) {
+	ASSERT(custom_shapes.find(name) != custom_shapes.end(), "A custom shape with this name does not exist!");
+	ASSERT(current_custom_shape_name != name, "Cannot instantiate the shape currently being created!");
+	std::shared_ptr<IR::custom_shape> s = std::make_shared<IR::custom_shape>(custom_shapes[name], x, y, z);
+	_default_prim_construct(s);
+	return s;
+}
+void user::createShapeBegin(const std::string& name) {
+	ASSERT(combination_stack.empty(), "Cannot create shape inside combation operator.");
+	ASSERT(current_custom_shape == nullptr, "Cannot create new shape while other shape is being created.");
+	ASSERT(name != "", "Invalid name for shape");
+	current_custom_shape = std::make_shared<std::vector<std::shared_ptr<IR::primitive>>>();
+	current_custom_shape_name = name;
+	custom_shapes[name] = current_custom_shape;
+
+}
+void user::createShapeEnd() {
+	ASSERT(current_custom_shape != nullptr, "No shape is currently being created.");
+	current_custom_shape = nullptr;
+	current_custom_shape_name = "";
 }

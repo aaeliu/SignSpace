@@ -35,8 +35,18 @@ x
 
 	directionalLight(0, -10, 0, 1.0);
 	// directionalLight(0.3, -1, 0, 0.3);
+	createShapeBegin("rod");
+		color(red);
+		sphere(0, 1.0, 1.0, 0.2);
+		color(yellow);
+		cylinder(0, 0.4, 1.0, 0.4, 0.1);
+	createShapeEnd();
 
-	color (red);
+	shape("rod", 0., 0, 0 );
+	shape("rod", 1., 0, 0);
+	shape("rod", 2., 0, 0);
+
+	/* color(red);
 	subtractionBegin();
 		sphere (0., 0., 1.0, 0.2);
 		box(0.15, 0., 1.0, 0.08, 0.1, 0.2);
@@ -84,7 +94,7 @@ x
 		smoothUnionEnd();
 		box(0.3, 0.8, 1.5, 0.2, 0.2, 0.5);
 		
-	smoothSubtractionEnd(); 
+	smoothSubtractionEnd(); */
 	
 	
 

@@ -5,7 +5,7 @@
 struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;
-	std::map <std::string, std::shared_ptr<IR::primitive>> custom_shapes;
+	std::map <std::string, std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>>> custom_shapes;
 	float current_blend_factor = 0.25f;
 	user(scene* c);
 
@@ -15,6 +15,8 @@ struct user {
 
 	std::shared_ptr <Color> current_color = std::make_shared <Color>(128, 128, 128); 
 	std::shared_ptr <Color> current_light_color = std::make_shared <Color>(255, 255, 255);
+	std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> current_custom_shape = nullptr;
+	std::string current_custom_shape_name = "";
 
 	void create_and_check();
 	void create();
@@ -65,6 +67,11 @@ struct user {
 	*/
 	std::shared_ptr<IR::primitive> torus (float x, float y, float z, float R, float r);
 
+	std::shared_ptr<IR::primitive> shape (const std::string& name, float x, float y, float z);
+	// CUSTOM SHAPE CREATION
+	void createShapeBegin(const std::string& name);
+	void createShapeEnd();
+
 	std::stack<std::shared_ptr <IR::combination>> combination_stack;
 	void smoothBlendFactor(float k);
 	std::shared_ptr <IR::combination> smoothUnionBegin(void);
@@ -105,9 +112,6 @@ struct user {
 	*/
 	void pointLight(float x, float y, float z, float i);
 
-	// OBJECT CREATION
-	void defineShapeBegin(std::string& name);
-	void defineShapeEnd();
 	
 
 };
