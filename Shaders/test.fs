@@ -35,11 +35,11 @@ vec4 mapV4(in vec3 p) {
    sdf = opUnion(sdf, vec4(d8, vec3(0, 0, 1)));
 	float d9 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
 	float d10 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
-	float d11 = opIntersection(d9, d10);
+	float d11 = opSmoothUnion(d9, d10,0.1); 
 	float d12 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
-	float d13 = opIntersection(d11, d12);
+	float d13 = opSmoothUnion(d11, d12,0.1); 
 	float d14 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
-	float d15 = opIntersection(d13, d14);
+	float d15 = opSmoothUnion(d13, d14,0.1); 
 	float d16 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
 	float d17 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
 	float d18 = opSmoothUnion(d16, d17,0.1); 

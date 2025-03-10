@@ -9,7 +9,7 @@ user::user(scene* c) {
 
 void user::create_and_check() {
 	create();
-	assert(combination_stack.empty());
+	ASSERT(combination_stack.empty(), "Unclosed combination operation (Hint: if you call [combination]Begin(), you must call [combination]End().");
 }
 
 void user::background(int g) {
@@ -99,8 +99,9 @@ std::shared_ptr <IR::combination> user::smoothUnionBegin() {
 }
 
 void user::smoothUnionEnd() {
+	ASSERT(!combination_stack.empty(), "No active combination operation to end.");
 	std::shared_ptr<IR::combination> s = combination_stack.top();
-	assert(s->get_comb_type() == IR::comb_type::SMOOTH_UNION);
+	ASSERT(s->get_comb_type() == IR::comb_type::SMOOTH_UNION, "smoothUnionBegin() does not close off smoothUnionEnd().");
 	combination_stack.pop();
 }
 
@@ -112,8 +113,9 @@ std::shared_ptr <IR::combination> user::subtractionBegin(void) {
 }
 
 void user::subtractionEnd(void) {
+	ASSERT(!combination_stack.empty(), "No active combination operation to end.");
 	std::shared_ptr<IR::combination> s = combination_stack.top();
-	assert(s->get_comb_type() == IR::comb_type::SUBTRACTION);
+	ASSERT(s->get_comb_type() == IR::comb_type::SUBTRACTION, "subtractionEnd() does not close off subtractionBegin().");
 	combination_stack.pop();
 }
 
@@ -126,8 +128,9 @@ std::shared_ptr <IR::combination> user::smoothSubtractionBegin(void) {
 }
 
 void user::smoothSubtractionEnd(void) {
+	ASSERT(!combination_stack.empty(), "No active combination operation to end.");
 	std::shared_ptr<IR::combination> s = combination_stack.top();
-	assert(s->get_comb_type() == IR::comb_type::SMOOTH_SUBTRACTION);
+	ASSERT (s->get_comb_type() == IR::comb_type::SMOOTH_SUBTRACTION, "smoothSubtractionEnd() does not close off smoothSubtractionBegin().");
 	combination_stack.pop();
 }
 
@@ -139,8 +142,9 @@ std::shared_ptr <IR::combination> user::intersectionBegin(void) {
 }
 
 void user::intersectionEnd(void) {
+	ASSERT(!combination_stack.empty(), "No active combination operation to end.");
 	std::shared_ptr<IR::combination> s = combination_stack.top();
-	assert(s->get_comb_type() == IR::comb_type::INTERSECTION);
+	ASSERT (s->get_comb_type() == IR::comb_type::INTERSECTION, "intersectionEnd() does not close off intersectionBegin().");
 	combination_stack.pop();
 }
 
@@ -153,8 +157,9 @@ std::shared_ptr <IR::combination> user::smoothIntersectionBegin(void) {
 }
 
 void user::smoothIntersectionEnd(void) {
+	ASSERT(!combination_stack.empty(), "No active combination operation to end.");
 	std::shared_ptr<IR::combination> s = combination_stack.top();
-	assert(s->get_comb_type() == IR::comb_type::SMOOTH_INTERSECTION);
+	ASSERT (s->get_comb_type() == IR::comb_type::SMOOTH_INTERSECTION, "smoothIntersectionEnd() does not close off smoothIntersectionBegin().");
 	combination_stack.pop();
 }
 
