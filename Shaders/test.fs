@@ -93,13 +93,21 @@ vec3 render(in vec3 ro, in vec3 rd)  {
    if (t > 0.0) {
        vec3 p = ro + rd * t;
        vec3 N = calcNormal(p);
-       vec3 L, CL;
-       float LdotN, shadL;
+       vec3 L, CL, distL;
+       float LdotN, shadL, falloffL;
        col += 0.25 * Cd;
 	L = vec3(-0, 1, 0);
 	CL = 1 * vec3(1, 1, 1);
 	LdotN = clamp(dot(L, N), 0., 1.);
 	shadL = shadow(p, L, 0.01, 1.0);
+	col += Cd * CL * LdotN * shadL;
+	distL = vec3(-0.5, -1, -1) - p;
+	L = normalize ( distL );
+	shadL = shadow(p, L, 0.01, 1.0);
+	falloffL = dot(distL, distL);
+	falloffL *= falloffL; 
+	CL = 1 * vec3(1, 1, 1)/falloffL;
+	LdotN = clamp(dot(L, N), 0., 1.);
 	col += Cd * CL * LdotN * shadL;
    }
    return col;

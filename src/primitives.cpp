@@ -74,3 +74,14 @@ int IR::directional_light::print(std::ofstream& f) const {
 
 }
 
+int IR::point_light::print(std::ofstream& f) const {
+	f << "	distL = vec3(" << x << ", " << y << ", " << z << ") - p;" << std::endl;
+	f << "	L = normalize ( distL );" << std::endl;
+	f << "	shadL = shadow(p, L, 0.01, 1.0);" << std::endl;
+	f << "	falloffL = dot(distL, distL);" << std::endl;
+	f << "	falloffL *= falloffL; " << std::endl;
+	f << "	CL = " << i << " * " << col->print() << "/falloffL;" << std::endl;
+	f << "	LdotN = clamp(dot(L, N), 0., 1.);" << std::endl;
+	f << "	col += Cd * CL * LdotN * shadL;" << std::endl;
+	return 1;
+}

@@ -107,8 +107,8 @@ void printer::print_render() {
     file << "   if (t > 0.0) {" << std::endl;
     file << "       vec3 p = ro + rd * t;" << std::endl;
     file << "       vec3 N = calcNormal(p);" << std::endl;
-    file << "       vec3 L, CL;" << std::endl;
-    file << "       float LdotN, shadL;" << std::endl;
+    file << "       vec3 L, CL, distL;" << std::endl;
+    file << "       float LdotN, shadL, falloffL;" << std::endl;
 
     // TODO: insert lighting / shadow equations here.
     file << "       col += " << context->ambient_factor << " * Cd;" << std::endl;

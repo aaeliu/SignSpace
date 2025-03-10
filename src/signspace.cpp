@@ -3,7 +3,7 @@
 void user::create() {
 	background(20, 5, 20);
 
-	directionalLight(0, -1, 0, 1.0);
+	directionalLight(0, -10, 0, 1.0);
 	// directionalLight(0.3, -1, 0, 0.3);
 
 	color (red);
@@ -15,6 +15,7 @@ void user::create() {
 
 	color (0, 255, 0);
 	sphere (-0.5, 0., 1.0, 0.1);
+	pointLight(-0.5, -1.00, 1.0, 1.0);
 	cone(-0.5, 0.5, 1.0, 0.2, 0.3);
 
 	color(255, 255, 0);

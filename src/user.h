@@ -68,6 +68,11 @@ struct user {
 	* x, y, z: direction light points. ie (0, -1, 0) is a downward pointing light
 	* i: directional light intensity. */
 	void directionalLight(float x, float y, float z, float i);
+	/* point light
+	*  x, y, z: location of point light
+	*  i: point light intensity
+	*/
+	void pointLight(float x, float y, float z, float i);
 
 	// COLOR VARIABLES
 	

@@ -123,6 +123,12 @@ void user::directionalLight(float x, float y, float z, float i) {
 	context->lights.push_back(new_light);
 }
 
+void user::pointLight(float x, float y, float z, float i) {
+	std::shared_ptr<IR::point_light> new_light = std::make_shared<IR::point_light>(x, y, -z, i);
+	new_light->col = context->current_light_color;
+	context->lights.push_back(new_light);
+}
+
 void user::rotateX(float degs) {
 	current_rot_x = degs * M_PI / 180.f;
 }
