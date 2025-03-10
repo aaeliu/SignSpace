@@ -2,17 +2,19 @@
 #include <stack>
 #include "scene.h"
 
-#define red 255, 0, 0
-
 struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;
+	std::map <std::string, std::shared_ptr<IR::primitive>> custom_shapes;
 	float current_blend_factor = 0.25f;
 	user(scene* c);
 
 	float current_rot_x = 0.0f;
 	float current_rot_y = 0.0f;
 	float current_rot_z = 0.0f;
+
+	std::shared_ptr <Color> current_color = std::make_shared <Color>(128, 128, 128); 
+	std::shared_ptr <Color> current_light_color = std::make_shared <Color>(255, 255, 255);
 
 	void create_and_check();
 	void create();
@@ -27,23 +29,41 @@ struct user {
 	void _default_prim_construct(std::shared_ptr<IR::primitive> s);
 
 	// SHAPE PRIMITIVES
-	std::shared_ptr<IR::primitive> sphere(float x, float y, float z, float r);
+
+	/**
+	* Create a sphere.
+	* @param[in] x,y,z:  coordinates of the sphere's center.
+	* @param[in] r:		 radius of the sphere.
+	*/
+	std::shared_ptr<IR::primitive> sphere (float x, float y, float z, float r);
+
+	/**
+	* Create a box.
+	* @param[in] x,y,z:  coordinates of the box's center
+	* @param[in] l,w,h:  the half-dimensions of the box.
+	*/
 	std::shared_ptr<IR::primitive> box (float x, float y, float z, float l, float w, float h);
+
+	/**
+	* Create a cone.
+	* @param[in] x,y,z:  coordinates of the sphere's center.
+	* @param[in] r, h:   radius and half-height of cone.
+	*/
 	std::shared_ptr<IR::primitive> cone (float x, float y, float z, float r, float h);
-	std::shared_ptr<IR::primitive> torus (float x, float y, float z, float t);
 
+	/**
+	* Create a cylinder.
+	* @param[in] x,y,z:  coordinates of the sphere's center.
+	* @param[in] r:		 radius of the sphere.
+	*/
+	std::shared_ptr<IR::primitive> cylinder (float x, float y, float z, float r, float h);
 
-
-	// Deprecated operators... 
-	/* template <typename ... prims>
-	std::shared_ptr<IR::primitive> smoothUnion(std::shared_ptr<IR::primitive> p1, std::shared_ptr<IR::primitive> p2, const prims& ... rest); */
-
-	/* std::shared_ptr<IR::primitive> smoothUnion(std::shared_ptr<IR::primitive> p1,
-												 std::shared_ptr<IR::primitive> p2);
-	std::shared_ptr<IR::primitive> subtract(std::shared_ptr<IR::primitive> p1,
-											std::shared_ptr<IR::primitive> p2);
-	std::shared_ptr<IR::primitive> smoothSubtract(std::shared_ptr<IR::primitive> p1,
-												 std::shared_ptr<IR::primitive> p2);*/ 
+	/**
+	* Create a torus.
+	* @param[in] x,y,z:  coordinates of the torus's center.
+	* @param[in] R, r:   big radius, inner radius.
+	*/
+	std::shared_ptr<IR::primitive> torus (float x, float y, float z, float R, float r);
 
 	std::stack<std::shared_ptr <IR::combination>> combination_stack;
 	void smoothBlendFactor(float k);
@@ -56,11 +76,19 @@ struct user {
 	std::shared_ptr <IR::combination> smoothSubtractionBegin(void);
 	void smoothSubtractionEnd(void);
 
-	// TRANSLATIONAL OPERATORS
+	std::shared_ptr <IR::combination> intersectionBegin(void);
+	void intersectionEnd(void);
+
+	// TRANSFORMATION OPERATORS
 	void rotateX(float degs);
 	void rotateY(float degs);
 	void rotateZ(float degs);
 	void rotate(float degs_x, float degs_y, float degs_z);
+
+	/*void translateX(float units);
+	void translateY(float units);
+	void translateZ(float units);
+	void translate(float u_x, float u_y, float u_z); */
 
 
 	// LIGHTS
@@ -74,7 +102,18 @@ struct user {
 	*/
 	void pointLight(float x, float y, float z, float i);
 
-	// COLOR VARIABLES
+	// OBJECT CREATION
+	void defineShapeBegin(std::string& name);
+	void defineShapeEnd();
 	
 
 };
+
+#define red 255, 0, 0
+#define green 0, 255, 0
+#define blue 0, 0, 255
+#define yellow 255, 255, 0
+#define cyan 0, 255, 255
+#define magenta 255, 0, 255
+#define black 0, 0, 0
+#define white 255, 255, 255

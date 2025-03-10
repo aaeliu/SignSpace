@@ -33,6 +33,16 @@ int IR::cone::print(std::ofstream& f, int d) const {
 	return d;
 }
 
+int IR::torus::print(std::ofstream& f, int d) const {
+	f << "	float d" << d << " = sdTorus(" << print_center_with_rotations() << ", vec2(" << R << ", " << r << ")); " << std::endl;
+	return d;
+}
+
+int IR::cylinder::print(std::ofstream& f, int d) const {
+	f << "	float d" << d << " = sdCylinder(" << print_center_with_rotations() << ", " << r << ", " << h << "); " << std::endl;
+	return d;
+}
+
 int IR::smooth_union::print(std::ofstream& f, int d) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d);
@@ -77,7 +87,7 @@ int IR::directional_light::print(std::ofstream& f) const {
 int IR::point_light::print(std::ofstream& f) const {
 	f << "	distL = vec3(" << x << ", " << y << ", " << z << ") - p;" << std::endl;
 	f << "	L = normalize ( distL );" << std::endl;
-	f << "	shadL = shadow(p, L, 0.01, 1.0);" << std::endl;
+	f << "	shadL = shadow(p, L, 0.01, length(distL));" << std::endl;
 	f << "	falloffL = dot(distL, distL);" << std::endl;
 	f << "	falloffL *= falloffL; " << std::endl;
 	f << "	CL = " << i << " * " << col->print() << "/falloffL;" << std::endl;

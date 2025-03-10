@@ -10,6 +10,7 @@ namespace IR {
 	struct primitive {
 		float x, y, z;
 		float rot_x =0, rot_y=0, rot_z=0;
+		// float trans_x = 0, trans_y = 0, trans_z = 0;
 		primitive(float x_, float y_, float z_): x(x_), y(y_), z(z_) {};
 		primitive() = default;
 		virtual ~primitive() = default;
@@ -46,6 +47,18 @@ namespace IR {
 	struct cone : public primitive {
 		float r, h;
 		cone(float x_, float y_, float z_, float r_, float h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	struct torus : public primitive {
+		float R, r;
+		torus(float x_, float y_, float z_, float R_, float r_) : primitive(x_, y_, z_), R(R_), r(r_) {};
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	struct cylinder : public primitive {
+		float r, h;
+		cylinder(float x_, float y_, float z_, float r_, float h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
 		int print(std::ofstream& f, int n) const override;
 	};
 

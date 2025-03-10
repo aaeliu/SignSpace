@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cstdlib>
 
 #include "printer.h"
 #include "scene.h"
@@ -28,6 +29,18 @@ const unsigned int SCR_HEIGHT = 600;
 float cam_x, cam_y, cam_z;
 
 int main () {
+
+	/*std::string file = "signspace.cpp";
+	std::string command = "g++ " + file + " -o my_program";
+	int result = std::system(command.c_str());
+	if (result == 0) {
+		std::cout << "Compilation successful." << std::endl;
+	}
+	else {
+		std::cerr << "Compilation failed." << std::endl;
+	}*/
+
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

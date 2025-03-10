@@ -22,8 +22,13 @@ void user::background(int r, int g, int b) {
 }
 
 void user::color(int r, int g, int b) {
-	context->current_color = std::make_shared<Color>(r, g, b);
+	current_color = std::make_shared<Color>(r, g, b);
 }
+
+void user::lightColor(int r, int g, int b) {
+	current_light_color = std::make_shared<Color>(r, g, b);
+}
+
 
 /* NOTE ON Z - COORDINATES!!
 * GLSL CODE HAS NEGATIVE-Z INTO THE SCREEN!
@@ -32,7 +37,7 @@ void user::color(int r, int g, int b) {
 
 /* applies state settings to newly constructed primitive... */
 void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
-	s->col = context->current_color;
+	s->col = current_color;
 	s->rot_x = current_rot_x;
 	s->rot_y = current_rot_y;
 	s->rot_z = current_rot_z;
@@ -57,10 +62,21 @@ std::shared_ptr<IR::primitive> user::box(float x, float y, float z, float l, flo
 }
 
 std::shared_ptr<IR::primitive> user::cone(float x, float y, float z, float r, float h) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cone>(x, y, -z, r, h);
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cone>(x, y, -z, r, 2 * h);
 	_default_prim_construct(s);
 	return s;
+}
 
+std::shared_ptr<IR::primitive> user::torus(float x, float y, float z, float R, float r) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::torus>(x, y, -z, R, r);
+	_default_prim_construct(s);
+	return s;
+}
+
+std::shared_ptr<IR::primitive> user::cylinder(float x, float y, float z, float r, float h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cylinder>(x, y, -z, r, h);
+	_default_prim_construct(s);
+	return s;
 }
 
 /*template <typename ... prims>
@@ -102,30 +118,17 @@ void user::subtractionEnd(void) {
 	combination_stack.pop();
 }
 
-/*
-* not supported.
-std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> p1, std::shared_ptr<IR::primitive> p2) {
-	p1->to_combine = true;
-	p2->to_combine = true;
-	
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::smooth_union>(p1, p2);
-	s->rot_z = current_rot_z;
-	s->col = context->current_color;
-
-	objects_temp.push_back(s);
-	return s;
-
-}*/
+// void user::defu
 
 void user::directionalLight(float x, float y, float z, float i) {
 	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);
-	new_light->col = context->current_light_color;
+	new_light->col = current_light_color;
 	context->lights.push_back(new_light);
 }
 
 void user::pointLight(float x, float y, float z, float i) {
 	std::shared_ptr<IR::point_light> new_light = std::make_shared<IR::point_light>(x, y, -z, i);
-	new_light->col = context->current_light_color;
+	new_light->col = current_light_color;
 	context->lights.push_back(new_light);
 }
 
