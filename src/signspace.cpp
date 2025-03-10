@@ -2,7 +2,7 @@
 
 void user::create() {
 	
-	background(70, 55, 245);
+	/*background(70, 55, 245);
 	directionalLight(1.3, -0.2, 1.3, 0.7);
 	//directionalLight(0, 0, -1, 1.0);
 	color(200, 0, 0);
@@ -16,13 +16,13 @@ void user::create() {
 	box(0, -0.75, 1.0, 10, 0.25, 10);
 
 	torus(0, 1, 1, 0.5, 0.1);
-	cylinder(2, 1, 1, 0.5, 1);
+	cylinder(2, 1, 1, 0.5, 1);*/
 	/*lightColor(blue);
 	pointLight(0., 4.0, 0.0, 1);
 	// directionalLight(0, -1, 0, 1.0);
 	// pointLight(0, 0, -1, 2);
 	color(255, 20, 20);
-
+x
 	int time = 0;
 
 
@@ -30,7 +30,7 @@ void user::create() {
 
 
 
-	/*
+	
 	background(20, 5, 20);
 
 	directionalLight(0, -10, 0, 1.0);
@@ -67,7 +67,8 @@ void user::create() {
 	color(0, 255, 255); 
 
 	rotateZ(45);
-	subtractionBegin();
+	smoothBlendFactor(0.1);
+	smoothSubtractionBegin();
 		smoothUnionBegin();
 			box(0.4, 0.5, 1.5, 0.2, 0.2, 0.2);
 			sphere(0.5, 0.2, 1.5, 0.3);
@@ -82,7 +83,7 @@ void user::create() {
 		box(0.4, 0.5, 1.5, 0.1, 0.1, 2.0);
 		smoothUnionEnd();
 		box(0.3, 0.8, 1.5, 0.2, 0.2, 0.5);
-	subtractionEnd(); */
+	smoothSubtractionEnd(); 
 	
 	
 

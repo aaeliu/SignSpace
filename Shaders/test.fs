@@ -9,23 +9,44 @@ float sdTorus(vec3 p, vec2 t) { vec2 q = vec2(length(p.xz) - t.x, p.y); return l
 float sdCylinder( vec3 p, float h, float r ) { vec2 d = abs(vec2(length(p.xz), p.y)) - vec2(r, h); return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));}
 float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }
 float opSubtraction( float d1, float d2 ) { return max(d1,-d2); }
-float opSmoothSubtraction( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0); return mix(d2, -d1, h) + k * h * (1.0 - h); }
+float opSmoothSubtraction( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0); return mix(d1, -d2, h) + k * h * (1.0 - h); }
 float opIntersection( float d1, float d2 ) { return max(d1, d2); }
+float opSmoothIntersection( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) + k * h * (1.0 - h); }
 vec3 rotate_x(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +1.0, +.0, +.0, +.0, +ca, -sa, +.0, +sa, +ca); }
 vec3 rotate_y(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, +.0, -sa, +.0, +1.0, +.0, +sa, +.0, +ca); }
 vec3 rotate_z(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle); return v * mat3( +ca, -sa, +.0, +sa, +ca, 0., +.0, +.0, 1.); }
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
-	float d0 = sdBox(rotate_y(p - vec3(0.5, 0, -1),0.785398), vec3(0.25, 0.5, 0.25)); 
-   sdf = vec4(d0, vec3(0.784314, 0, 0));
-	float d1 = sdBox(p - vec3(-0.5, 0, -1), vec3(0.25, 0.5, 0.25)); 
-   sdf = opUnion(sdf, vec4(d1, vec3(0.784314, 0, 0)));
-	float d2 = sdBox(p - vec3(0, -0.75, -1), vec3(10, 0.25, 10)); 
-   sdf = opUnion(sdf, vec4(d2, vec3(0.196078, 0.784314, 0.784314)));
-	float d3 = sdTorus(p - vec3(0, 1, -1), vec2(0.5, 0.1)); 
-   sdf = opUnion(sdf, vec4(d3, vec3(0.196078, 0.784314, 0.784314)));
-	float d4 = sdCylinder(p - vec3(2, 1, -1), 0.5, 1); 
-   sdf = opUnion(sdf, vec4(d4, vec3(0.196078, 0.784314, 0.784314)));
+	float d0 = sdSphere(p - vec3(0, 0, -1), 0.2);
+	float d1 = sdBox(p - vec3(0.15, 0, -1), vec3(0.08, 0.1, 0.2)); 
+	float d2 = opSubtraction(d0, d1);
+   sdf = vec4(d2, vec3(1, 0, 0));
+	float d3 = sdSphere(p - vec3(0.4, 0, -1), 0.1);
+   sdf = opUnion(sdf, vec4(d3, vec3(1, 0, 0)));
+	float d4 = sdSphere(p - vec3(-0.5, 0, -1), 0.1);
+   sdf = opUnion(sdf, vec4(d4, vec3(0, 1, 0)));
+	float d5 = sdCone(p - vec3(-0.5, 0.5, -1), 0.2, 0.6); 
+   sdf = opUnion(sdf, vec4(d5, vec3(0, 1, 0)));
+	float d6 = sdBox(rotate_y(p - vec3(-1, -0.25, -2),0.785398), vec3(0.3, 0.2, 0.5)); 
+   sdf = opUnion(sdf, vec4(d6, vec3(1, 1, 0)));
+	float d7 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
+   sdf = opUnion(sdf, vec4(d7, vec3(0, 0, 1)));
+	float d8 = sdSphere(p - vec3(-0, -0.4, -0.25), 0.3);
+   sdf = opUnion(sdf, vec4(d8, vec3(0, 0, 1)));
+	float d9 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
+	float d10 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
+	float d11 = opIntersection(d9, d10);
+	float d12 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
+	float d13 = opIntersection(d11, d12);
+	float d14 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
+	float d15 = opIntersection(d13, d14);
+	float d16 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
+	float d17 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
+	float d18 = opSmoothUnion(d16, d17,0.1); 
+	float d19 = opSmoothSubtraction(d15, d18,0.1); 
+	float d20 = sdBox(rotate_z(p - vec3(0.3, 0.8, -1.5),0.523599), vec3(0.2, 0.2, 0.5)); 
+	float d21 = opSmoothSubtraction(d19, d20,0.1); 
+   sdf = opUnion(sdf, vec4(d21, vec3(0, 1, 1)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
@@ -68,7 +89,7 @@ float shadow(in vec3 ro, in vec3 rd, float mint, float maxt) {
         return 1.0;
     }
 vec3 render(in vec3 ro, in vec3 rd)  {
-   vec3 col = vec3(0.27451, 0.215686, 0.960784);
+   vec3 col = vec3(0.0784314, 0.0196078, 0.0784314);
    vec4  ray = raymarchV4(ro, rd);
    float t = ray.x;
    vec3 Cd = ray.yzw;
@@ -78,10 +99,26 @@ vec3 render(in vec3 ro, in vec3 rd)  {
        vec3 L, CL, distL;
        float LdotN, shadL, falloffL;
        col += 0.2 * Cd;
-	L = vec3(-0.702959, 0.108148, 0.702959);
-	CL = 0.7 * vec3(1, 1, 1);
+	L = vec3(-0, 1, 0);
+	CL = 1 * vec3(1, 1, 1);
 	LdotN = clamp(dot(L, N), 0., 1.);
 	shadL = shadow(p, L, 0.01, 1.0);
+	col += Cd * CL * LdotN * shadL;
+	distL = vec3(-0.5, -1, -1) - p;
+	L = normalize ( distL );
+	shadL = shadow(p, L, 0.01, length(distL));
+	falloffL = dot(distL, distL);
+	falloffL *= falloffL; 
+	CL = 1 * vec3(1, 1, 0)/falloffL;
+	LdotN = clamp(dot(L, N), 0., 1.);
+	col += Cd * CL * LdotN * shadL;
+	distL = vec3(1.5, -1, -1) - p;
+	L = normalize ( distL );
+	shadL = shadow(p, L, 0.01, length(distL));
+	falloffL = dot(distL, distL);
+	falloffL *= falloffL; 
+	CL = 1 * vec3(1, 0, 1)/falloffL;
+	LdotN = clamp(dot(L, N), 0., 1.);
 	col += Cd * CL * LdotN * shadL;
    }
    return col;

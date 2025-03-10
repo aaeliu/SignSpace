@@ -79,6 +79,9 @@ struct user {
 	std::shared_ptr <IR::combination> intersectionBegin(void);
 	void intersectionEnd(void);
 
+	std::shared_ptr <IR::combination> smoothIntersectionBegin(void);
+	void smoothIntersectionEnd(void);
+
 	// TRANSFORMATION OPERATORS
 	void rotateX(float degs);
 	void rotateY(float degs);

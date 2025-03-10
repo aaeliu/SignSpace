@@ -95,7 +95,6 @@ std::shared_ptr <IR::combination> user::smoothUnionBegin() {
 	_default_prim_construct(s);
 	s->blend_factor = current_blend_factor;
 	combination_stack.push(s);
-
 	return s;
 }
 
@@ -118,7 +117,47 @@ void user::subtractionEnd(void) {
 	combination_stack.pop();
 }
 
-// void user::defu
+std::shared_ptr <IR::combination> user::smoothSubtractionBegin(void) {
+	std::shared_ptr<IR::smooth_subtraction> s = std::make_shared<IR::smooth_subtraction>();
+	s->blend_factor = current_blend_factor;
+	_default_prim_construct(s);
+	combination_stack.push(s);
+	return s;
+}
+
+void user::smoothSubtractionEnd(void) {
+	std::shared_ptr<IR::combination> s = combination_stack.top();
+	assert(s->get_comb_type() == IR::comb_type::SMOOTH_SUBTRACTION);
+	combination_stack.pop();
+}
+
+std::shared_ptr <IR::combination> user::intersectionBegin(void) {
+	std::shared_ptr<IR::combination> s = std::make_shared<IR::intersection>();
+	_default_prim_construct(s);
+	combination_stack.push(s);
+	return s;
+}
+
+void user::intersectionEnd(void) {
+	std::shared_ptr<IR::combination> s = combination_stack.top();
+	assert(s->get_comb_type() == IR::comb_type::INTERSECTION);
+	combination_stack.pop();
+}
+
+std::shared_ptr <IR::combination> user::smoothIntersectionBegin(void) {
+	std::shared_ptr<IR::smooth_intersection> s = std::make_shared<IR::smooth_intersection>();
+	s->blend_factor = current_blend_factor;
+	_default_prim_construct(s);
+	combination_stack.push(s);
+	return s;
+}
+
+void user::smoothIntersectionEnd(void) {
+	std::shared_ptr<IR::combination> s = combination_stack.top();
+	assert(s->get_comb_type() == IR::comb_type::SMOOTH_INTERSECTION);
+	combination_stack.pop();
+}
+
 
 void user::directionalLight(float x, float y, float z, float i) {
 	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);

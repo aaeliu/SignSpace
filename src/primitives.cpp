@@ -73,6 +73,51 @@ int IR::subtraction::print(std::ofstream& f, int d) const {
 	return d2;
 }
 
+int IR::smooth_subtraction::print(std::ofstream& f, int d) const {
+	int d0, d1, d2;
+	d0 = shapes[0]->print(f, d);
+	d2 = d0;
+	for (int i = 1; i < shapes.size(); i++) {
+		const auto& shape = shapes[i];
+		d1 = shape->print(f, d0 + 1);
+		d2 = d1 + 1;
+
+		f << "	float d" << d2 << " = opSmoothSubtraction(d" << d0 << ", d" << d1 << "," << blend_factor << "); " << std::endl;
+		d0 = d2;
+	}
+	return d2;
+}
+
+int IR::intersection::print(std::ofstream& f, int d) const {
+	int d0, d1, d2;
+	d0 = shapes[0]->print(f, d);
+	d2 = d0;
+	for (int i = 1; i < shapes.size(); i++) {
+		const auto& shape = shapes[i];
+		d1 = shape->print(f, d0 + 1);
+		d2 = d1 + 1;
+
+		f << "	float d" << d2 << " = opIntersection(d" << d0 << ", d" << d1 << ");" << std::endl;
+		d0 = d2;
+	}
+	return d2;
+}
+
+int IR::smooth_intersection::print(std::ofstream& f, int d) const {
+	int d0, d1, d2;
+	d0 = shapes[0]->print(f, d);
+	d2 = d0;
+	for (int i = 1; i < shapes.size(); i++) {
+		const auto& shape = shapes[i];
+		d1 = shape->print(f, d0 + 1);
+		d2 = d1 + 1;
+
+		f << "	float d" << d2 << " = opSmoothIntersection(d" << d0 << ", d" << d1 << "," << blend_factor << "); " << std::endl;
+		d0 = d2;
+	}
+	return d2;
+}
+
 int IR::directional_light::print(std::ofstream& f) const {
 
 	f << "	L = vec3(" << -x << ", " << -y << ", " << -z << ");" << std::endl;

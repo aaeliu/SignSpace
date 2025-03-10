@@ -66,7 +66,7 @@ namespace IR {
 	enum comb_type{
 		SMOOTH_UNION,
 		SUBTRACTION,
-		SMOOTH_SUBRACTION,
+		SMOOTH_SUBTRACTION,
 		INTERSECTION,
 		SMOOTH_INTERSECTION
 	};
@@ -89,6 +89,26 @@ namespace IR {
 	struct subtraction : public combination {
 		subtraction() {}
 		comb_type get_comb_type() const override { return comb_type::SUBTRACTION; }
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	struct smooth_subtraction : public combination {
+		float blend_factor = 0.25;
+		smooth_subtraction() {}
+		comb_type get_comb_type() const override { return comb_type::SMOOTH_SUBTRACTION; }
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	struct intersection : public combination {
+		intersection() {}
+		comb_type get_comb_type() const override { return comb_type::INTERSECTION; }
+		int print(std::ofstream& f, int n) const override;
+	};
+
+	struct smooth_intersection : public combination {
+		float blend_factor = 0.25;
+		smooth_intersection () {}
+		comb_type get_comb_type() const override { return comb_type::SMOOTH_INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
 	};
 }

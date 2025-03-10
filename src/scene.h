@@ -1,9 +1,21 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <cassert>
 #include "color.h"
 #include "primitives.h"
 #include "light.h"
+
+// thanks StackOverflow https://stackoverflow.com/a/3767883
+#define ASSERT(condition, message) \
+    do { \
+        if (! (condition)) { \
+            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                      << " line " << __LINE__ << ": " << message << std::endl; \
+            std::terminate(); \
+        } \
+    } while (false)
+
 
 enum prim_type {
 	SPHERE,
