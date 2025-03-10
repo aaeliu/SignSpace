@@ -2,6 +2,8 @@
 #include <stack>
 #include "scene.h"
 
+#define red 255, 0, 0
+
 struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;

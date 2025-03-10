@@ -242,7 +242,7 @@ void main(  )
 {
     vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); // normalized coordinates (unit height)
     vec3 pix = vec3(pXY,    0.);    // position of virtual pixel (Z=0 depth)
-    vec3 ro  = vec3(0,0., 3. ) ;    // ray origin (EYE POSITION).. controls field-of-view
+    vec3 ro  = vec3(0,0., 3. );    // ray origin (EYE POSITION).. controls field-of-view
     vec3 rd  = normalize(pix - ro); // ray direction
     
     vec3 col = render(ro, rd); // ray-march and evaluate color

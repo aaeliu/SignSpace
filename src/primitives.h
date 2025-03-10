@@ -43,6 +43,13 @@ namespace IR {
 		int print(std::ofstream& f, int n) const override;
 	};
 
+	struct cone : public primitive {
+		float r, h;
+		cone(float x_, float y_, float z_, float r_, float h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		int print(std::ofstream& f, int n) const override;
+	};
+
+
 	enum comb_type{
 		SMOOTH_UNION,
 		SUBTRACTION,

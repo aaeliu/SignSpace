@@ -28,6 +28,11 @@ int IR::box::print(std::ofstream& f, int d) const {
 	return d;
 }
 
+int IR::cone::print(std::ofstream& f, int d) const {
+	f << "	float d" << d << " = sdCone(" << print_center_with_rotations() << ", " << r << ", " << h << "); " << std::endl;
+	return d;
+}
+
 int IR::smooth_union::print(std::ofstream& f, int d) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d);

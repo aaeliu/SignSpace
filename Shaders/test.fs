@@ -4,6 +4,7 @@ float opUnion( float d1, float d2 ) {  return min(d1,d2); }
 vec4  opUnion(vec4 d1, vec4 d2) { return (d1.x < d2.x ? d1 : d2); }
 float sdSphere (vec3 p, float s) { return length(p) - s; }
 float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}
+float sdCone(vec3 p, float r, float h) { vec2 q = vec2(length(p.xz) - r, p.y + 0.5 * h); vec2 e = vec2(-r, h); vec2 d1 = q - e * clamp(dot(q, e) / dot(e, e), 0.0, 1.0); vec2 d2 = vec2(max(q.x, 0.0), -q.y); return sqrt(min(dot(d1, d1), dot(d2, d2))) * sign(max(max(d1.x, d1.y), d2.y)); }
 float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }
 float opSubtraction( float d1, float d2 ) { return max(d1,-d2); }
 float opSmoothSubtraction( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0); return mix(d2, -d1, h) + k * h * (1.0 - h); }
@@ -21,26 +22,28 @@ vec4 mapV4(in vec3 p) {
    sdf = opUnion(sdf, vec4(d3, vec3(1, 0, 0)));
 	float d4 = sdSphere(p - vec3(-0.5, 0, -1), 0.1);
    sdf = opUnion(sdf, vec4(d4, vec3(0, 1, 0)));
-	float d5 = sdBox(rotate_y(rotate_z(p - vec3(-1, -0.25, -2),0.785398),0.785398), vec3(0.3, 0.2, 0.5)); 
-   sdf = opUnion(sdf, vec4(d5, vec3(1, 1, 0)));
-	float d6 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
-   sdf = opUnion(sdf, vec4(d6, vec3(0, 0, 1)));
-	float d7 = sdSphere(p - vec3(-0, -0.4, -0.25), 0.3);
+	float d5 = sdCone(p - vec3(-0.5, 0.5, -1), 0.2, 0.3); 
+   sdf = opUnion(sdf, vec4(d5, vec3(0, 1, 0)));
+	float d6 = sdBox(rotate_y(p - vec3(-1, -0.25, -2),0.785398), vec3(0.3, 0.2, 0.5)); 
+   sdf = opUnion(sdf, vec4(d6, vec3(1, 1, 0)));
+	float d7 = sdSphere(p - vec3(-0.5, 0.25, -1), 0.1);
    sdf = opUnion(sdf, vec4(d7, vec3(0, 0, 1)));
-	float d8 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
-	float d9 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
-	float d10 = opSmoothUnion(d8, d9,0.25); 
-	float d11 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
-	float d12 = opSmoothUnion(d10, d11,0.25); 
-	float d13 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
-	float d14 = opSmoothUnion(d12, d13,0.25); 
-	float d15 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
-	float d16 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
-	float d17 = opSmoothUnion(d15, d16,0.25); 
-	float d18 = opSubtraction(d14, d17);
-	float d19 = sdBox(rotate_z(p - vec3(0.3, 0.8, -1.5),0.523599), vec3(0.2, 0.2, 0.5)); 
-	float d20 = opSubtraction(d18, d19);
-   sdf = opUnion(sdf, vec4(d20, vec3(0, 1, 1)));
+	float d8 = sdSphere(p - vec3(-0, -0.4, -0.25), 0.3);
+   sdf = opUnion(sdf, vec4(d8, vec3(0, 0, 1)));
+	float d9 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.785398), vec3(0.2, 0.2, 0.2)); 
+	float d10 = sdSphere(p - vec3(0.5, 0.2, -1.5), 0.3);
+	float d11 = opSmoothUnion(d9, d10,0.25); 
+	float d12 = sdSphere(p - vec3(0.8, 0.3, -1.5), 0.1);
+	float d13 = opSmoothUnion(d11, d12,0.25); 
+	float d14 = sdSphere(p - vec3(0.3, 0.8, -1.5), 0.3);
+	float d15 = opSmoothUnion(d13, d14,0.25); 
+	float d16 = sdBox(p - vec3(0.4, 0.5, -1.5), vec3(0.1, 0.1, 2)); 
+	float d17 = sdBox(rotate_z(p - vec3(0.4, 0.5, -1.5),0.523599), vec3(0.1, 0.1, 2)); 
+	float d18 = opSmoothUnion(d16, d17,0.25); 
+	float d19 = opSubtraction(d15, d18);
+	float d20 = sdBox(rotate_z(p - vec3(0.3, 0.8, -1.5),0.523599), vec3(0.2, 0.2, 0.5)); 
+	float d21 = opSubtraction(d19, d20);
+   sdf = opUnion(sdf, vec4(d21, vec3(0, 1, 1)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
@@ -92,14 +95,9 @@ vec3 render(in vec3 ro, in vec3 rd)  {
        vec3 N = calcNormal(p);
        vec3 L, CL;
        float LdotN, shadL;
-       col += 0.1 * Cd;
-	L = vec3(-0, 1, 1.4);
-	CL = 0.3 * vec3(1, 1, 1);
-	LdotN = clamp(dot(L, N), 0., 1.);
-	shadL = shadow(p, L, 0.01, 1.0);
-	col += Cd * CL * LdotN * shadL;
-	L = vec3(-0.3, 1, 0);
-	CL = 0.3 * vec3(1, 1, 1);
+       col += 0.25 * Cd;
+	L = vec3(-0, 1, 0);
+	CL = 1 * vec3(1, 1, 1);
 	LdotN = clamp(dot(L, N), 0., 1.);
 	shadL = shadow(p, L, 0.01, 1.0);
 	col += Cd * CL * LdotN * shadL;

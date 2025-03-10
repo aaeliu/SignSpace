@@ -56,6 +56,13 @@ std::shared_ptr<IR::primitive> user::box(float x, float y, float z, float l, flo
 	return s;
 }
 
+std::shared_ptr<IR::primitive> user::cone(float x, float y, float z, float r, float h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cone>(x, y, -z, r, h);
+	_default_prim_construct(s);
+	return s;
+
+}
+
 /*template <typename ... prims>
 std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> p1, std::shared_ptr<IR::primitive> p2, const prims& ... rest) {
 	std::cout << "Meow??\n";
