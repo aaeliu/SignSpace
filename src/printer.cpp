@@ -17,7 +17,7 @@ void printer::print_sdf_functions () {
   file << "float sdBox (vec3 p, vec3 b) {vec3 q = abs(p) - b;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);}" << std::endl;
   file << "float sdCone(vec3 p, float r, float h) { vec2 q = vec2(length(p.xz) - r, p.y + 0.5 * h); vec2 e = vec2(-r, h); vec2 d1 = q - e * clamp(dot(q, e) / dot(e, e), 0.0, 1.0); vec2 d2 = vec2(max(q.x, 0.0), -q.y); return sqrt(min(dot(d1, d1), dot(d2, d2))) * sign(max(max(d1.x, d1.y), d2.y)); }" << std::endl;
   file << "float sdTorus(vec3 p, vec2 t) { vec2 q = vec2(length(p.xz) - t.x, p.y); return length(q) - t.y; }" << std::endl;
-  file << "float sdCylinder( vec3 p, float h, float r ) { vec2 d = abs(vec2(length(p.xz), p.y)) - vec2(r, h); return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));}" << std::endl;
+  file << "float sdCylinder( vec3 p, float r, float h ) { vec2 d = abs(vec2(length(p.xz), p.y)) - vec2(r, h); return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));}" << std::endl;
   file << "float opSmoothUnion( float d1, float d2, float k ) { float h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0); return mix(d2, d1, h) - k * h * (1.0 - h); }" << std::endl;
   file << "float opSubtraction( float d1, float d2 ) { return max(d1,-d2); }" << std::endl;
   file << "float opSmoothSubtraction( float d1, float d2, float k ) { float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0); return mix(d1, -d2, h) + k * h * (1.0 - h); }" << std::endl;
@@ -115,7 +115,7 @@ void printer::print_shadow_functions() {
 
 void printer::print_render() {
     file << "vec3 render(in vec3 ro, in vec3 rd)  {" << std::endl;
-    file << "   vec3 col = " << context->background.print() << ";" << std::endl;
+    file << "   vec3 col = vec3(0.,0.,0.);" << std::endl;
     file << "   vec4  ray = raymarchV4(ro, rd);" << std::endl;
     file << "   float t = ray.x;" << std::endl;
     file << "   vec3 Cd = ray.yzw;" << std::endl;
@@ -131,8 +131,8 @@ void printer::print_render() {
         light->print(file);
     }
 
-    file << "   }" << std::endl;
-    file << "   return col;" << std::endl;
+    file << "   return col;}" << std::endl;
+    file << "   return " << context->background.print() << ";" << std::endl;
     file << "}" << std::endl;
 }
 
@@ -141,8 +141,8 @@ void printer::print_main() {
     file << "in vec2 pos;" << std::endl;
     file << "void main () {" << std::endl;
     file << "   vec2 pXY = vec2(pos.x, pos.y * 6.0/8.0); " << std::endl;
-    file << "   vec3 pix = vec3(pXY.x, pXY.y, 2.) + camTransform;" << std::endl;
-    file << "   vec3 ro  = vec3(0.,0., 8. ) + camTransform;" << std::endl;
+    file << "   vec3 pix = vec3(pXY.x, pXY.y, 12.) + camTransform;" << std::endl;
+    file << "   vec3 ro  = vec3(0.,0., 15. ) + camTransform;" << std::endl;
     file << "   vec3 rd  = normalize(pix - ro);" << std::endl;
     file << "   vec3 col = render(ro, rd);" << std::endl;
     file << "  FragColor = vec4(col, 1.0f);" << std::endl;

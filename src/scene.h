@@ -27,7 +27,8 @@ struct scene {
 	std::vector<std::shared_ptr<IR::primitive>> shapes;
 	std::vector<std::shared_ptr<IR::light>> lights;
 	Color background = Color (0, 0, 0);
-	float ambient_factor = 0.2; // Default ambient factor.
+	Color ambient_color = Color(1, 1, 1);
+	float ambient_factor = 0.1; // Default ambient factor.
 
 	std::map <prim_type, bool> prim_present;
 	scene ();

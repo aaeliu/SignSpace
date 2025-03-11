@@ -73,19 +73,51 @@ struct user {
 	void createShapeEnd();
 
 	std::stack<std::shared_ptr <IR::combination>> combination_stack;
+
+	/**
+	* Adjust how smoothly smooth combination operations will combine shapes together.
+	*/
 	void smoothBlendFactor(float k);
+
+	/**
+	*	Begin a smooth union operation. All shapes enclosed between smoothUnionBegin()
+	*	and smoothUnionEnd() will be joined with a smooth union.
+	* 
+	*	Modify smoothing factor with smoothBlendFactor.
+	*/
 	std::shared_ptr <IR::combination> smoothUnionBegin(void);
 	void smoothUnionEnd(void);
 
+	/**
+	*	Begin a subtraction operation. All shapes enclosed between subtractionBegin() and subtractionEnd() 
+	*	will be subtracted from the first shape after subtractionBegin().
+	*/
 	std::shared_ptr <IR::combination> subtractionBegin(void);
 	void subtractionEnd(void);
 
+	/**
+	*	Begin a smooth subtraction operation. All shapes enclosed between smoothSubtractionBegin() and smoothSubtractionBegin()
+	*	will be smooth subtracted from the first shape after smoothSubtractionBegin().
+	* 
+	*	Modify smoothing factor with smoothBlendFactor.
+	*/
 	std::shared_ptr <IR::combination> smoothSubtractionBegin(void);
 	void smoothSubtractionEnd(void);
 
+	/**
+	*	Begin an intersection operation. All shapes enclosed between intersectionBegin()
+	*	and intersectionEnd() will have the intersection operation applied.
+	*
+	*/
 	std::shared_ptr <IR::combination> intersectionBegin(void);
 	void intersectionEnd(void);
 
+	/**
+	*	Begin a smooth intersection operation. All shapes enclosed between smoothIntersectionBegin()
+	*	and smoothIntersectionEnd() will have the smooth intersection operation applied.
+	*
+	*	Modify smoothing factor with smoothBlendFactor.
+	*/
 	std::shared_ptr <IR::combination> smoothIntersectionBegin(void);
 	void smoothIntersectionEnd(void);
 
@@ -106,6 +138,7 @@ struct user {
 	* x, y, z: direction light points. ie (0, -1, 0) is a downward pointing light
 	* i: directional light intensity. */
 	void directionalLight(float x, float y, float z, float i);
+	void ambientLight(float i);
 	/* point light
 	*  x, y, z: location of point light
 	*  i: point light intensity

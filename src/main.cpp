@@ -40,6 +40,10 @@ int main () {
 		std::cerr << "Compilation failed." << std::endl;
 	}*/
 
+	const char* filename = "./Shaders/test.fs";
+	scene* s = new scene();
+	printer p(filename, s);
+	p.print();
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -92,13 +96,10 @@ int main () {
 			infoLog << std::endl;
 	}
 
-	const char* filename = "./Shaders/test.fs";
 
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	scene* s = new scene();
-	printer p(filename, s);
-	p.print();
+
 	std::string fragmentShaderSource;
 	std::ifstream fShaderFile;
 	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -207,7 +208,7 @@ void processInput(GLFWwindow* window) {
 	else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		cam_y += 0.005;
 	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
 		cam_y -= 0.005;
 	}
 
