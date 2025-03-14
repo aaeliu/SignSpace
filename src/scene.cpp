@@ -9,4 +9,7 @@ scene::scene() {
 		if (!p->to_combine)
 			shapes.push_back(p);
 	}
+	ambient_color.r *= ambient_factor;
+	ambient_color.g *= ambient_factor;
+	ambient_color.b *= ambient_factor;
 }

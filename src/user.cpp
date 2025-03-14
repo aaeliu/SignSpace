@@ -21,6 +21,10 @@ void user::background(int r, int g, int b) {
 
 }
 
+void user::ambientColor(int r, int g, int b) {
+	context->ambient_color = Color::Color(r, g, b);
+}
+
 void user::color(int r, int g, int b) {
 	current_color = std::make_shared<Color>(r, g, b);
 }
@@ -219,5 +223,3 @@ void user::createShapeEnd() {
 	current_custom_shape_name = "";
 }
 
-void user::ambientLight(float i) {
-}

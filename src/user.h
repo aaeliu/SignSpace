@@ -26,6 +26,7 @@ struct user {
 
 	void color (int r, int g, int b);
 	void lightColor(int r, int g, int b); // white by default.
+	void ambientColor(int r, int g, int b);
 	// void color (std::shared_ptr<Color> c);
 
 	void _default_prim_construct(std::shared_ptr<IR::primitive> s);
@@ -138,7 +139,7 @@ struct user {
 	* x, y, z: direction light points. ie (0, -1, 0) is a downward pointing light
 	* i: directional light intensity. */
 	void directionalLight(float x, float y, float z, float i);
-	void ambientLight(float i);
+
 	/* point light
 	*  x, y, z: location of point light
 	*  i: point light intensity

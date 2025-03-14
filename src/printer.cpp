@@ -120,6 +120,7 @@ void printer::print_render() {
     file << "   float t = ray.x;" << std::endl;
     file << "   vec3 Cd = ray.yzw;" << std::endl;
     file << "   if (t > 0.0) {" << std::endl;
+    file << "       col = Cd *" << context->ambient_color.print() << ";" << std::endl;
     file << "       vec3 p = ro + rd * t;" << std::endl;
     file << "       vec3 N = calcNormal(p);" << std::endl;
     file << "       vec3 L, CL, distL;" << std::endl;

@@ -12,11 +12,6 @@ void user::create() {
 	*	directionalLight(), pointLight()
 	* */
 
-	background(100);
-	color(10, 195, 48);
-	cone(0.1, 0.1, 0.1, 5, 1);
-	color(50, 10, 80);
-	cylinder(6, 3, 1, 2.94, 1.0);
 	
 	/*background(127);
 	color(255, 119, 0);
@@ -53,7 +48,7 @@ void user::create() {
 	box(-1.88, -0.65, -2.3, 0.2, 0.2, 0.2);
 	smoothUnionEnd();*/
 	
-	/*
+	ambientColor(7, 5, 100);
 	background(7, 5, 20);
 	directionalLight(0.4, -1, 0.4, 0.2);
 	lightColor(30, 30, 255);
@@ -121,7 +116,7 @@ void user::create() {
 
 	for (int i = 0; i < 5; i++) {
 		shape("tree", -6 + 3.5 * i, 2., 6.);
-	}*/
+	}
 
 	
 	/*background(25, 25, 25);
