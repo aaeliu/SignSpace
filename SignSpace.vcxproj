@@ -138,6 +138,7 @@
     <ClCompile Include="src\printer.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\signspace.cpp" />
+    <ClCompile Include="src\time.cpp" />
     <ClCompile Include="src\user.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="src\primitives.h" />
     <ClInclude Include="src\printer.h" />
     <ClInclude Include="src\scene.h" />
+    <ClInclude Include="src\time.h" />
     <ClInclude Include="src\user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

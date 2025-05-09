@@ -7,6 +7,7 @@ printer::printer (std::string filename, scene* c) {
 
 void printer::print_uniforms() {
     file << "uniform vec3 camTransform;" << std::endl;
+    file << "uniform float time;" << std::endl;
 }
 
 // src: https://iquilezles.org/articles/distfunctions/
@@ -120,7 +121,7 @@ void printer::print_render() {
     file << "   float t = ray.x;" << std::endl;
     file << "   vec3 Cd = ray.yzw;" << std::endl;
     file << "   if (t > 0.0) {" << std::endl;
-    file << "       col = Cd *" << context->ambient_color.print() << ";" << std::endl;
+    file << "       col = Cd *" << context->ambient_color->print() << ";" << std::endl;
     file << "       vec3 p = ro + rd * t;" << std::endl;
     file << "       vec3 N = calcNormal(p);" << std::endl;
     file << "       vec3 L, CL, distL;" << std::endl;
@@ -133,7 +134,8 @@ void printer::print_render() {
     }
 
     file << "   return col;}" << std::endl;
-    file << "   return " << context->background.print() << ";" << std::endl;
+    //file << "   return vec3(0., time, 0.);" << std::endl;
+    file << "   return " << context->background->print() << ";" << std::endl;
     file << "}" << std::endl;
 }
 

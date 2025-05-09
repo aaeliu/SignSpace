@@ -26,8 +26,8 @@ enum prim_type {
 struct scene {
 	std::vector<std::shared_ptr<IR::primitive>> shapes;
 	std::vector<std::shared_ptr<IR::light>> lights;
-	Color background = Color (0, 0, 0);
-	Color ambient_color = Color(0, 0, 0);
+	std::shared_ptr<Color> background = std::make_shared<Color> (0, 0, 0);
+	std::shared_ptr<Color> ambient_color = std::make_shared <Color>(0, 0, 0);
 	float ambient_factor = 0.1; // Default ambient factor.
 
 	std::map <prim_type, bool> prim_present;

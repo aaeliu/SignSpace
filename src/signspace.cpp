@@ -48,9 +48,9 @@ void user::create() {
 	box(-1.88, -0.65, -2.3, 0.2, 0.2, 0.2);
 	smoothUnionEnd();*/
 	
-	ambientColor(7, 5, 100);
-	background(7, 5, 20);
-	directionalLight(0.4, -1, 0.4, 0.2);
+	// ambientColor(7, 5, 100);
+	background(sin(t) * 120, 5, t + 3);
+	/*directionalLight(0.4, -1, 0.4, 0.2);
 	lightColor(30, 30, 255);
 	directionalLight(0., -1, 0., 0.05);
 
@@ -63,8 +63,8 @@ void user::create() {
 	color(230, 230, 240);
 	smoothBlendFactor(0.2);
 	smoothUnionBegin();
-		box(0, -2.75, 0.0,20, 0.75, 20);
-		sphere(0, -0.75, 2.0, 2.);
+		box(0., -2.75, 0.0,20., 0.75, 20.);
+		sphere(0., -0.75, 2.0, 2.);
 		sphere(-0.15, 1.25, 2.0, 1.5);
 		sphere(-0.3, 3.2, 2.0, 1.);
 	smoothUnionEnd();
@@ -80,7 +80,7 @@ void user::create() {
 	rotateZ(-15);
 	color(20, 20, 20);
 	cylinder(-0.4, 3.8, 2.0, 1.25, 0.1);
-	cylinder(-0.56, 4.6, 2.0, 1, 0.75);
+	cylinder(-0.56, 4.6, 2.0, 1., 0.75);
 
 	// SNOWMAN ARMS
 	color(150, 70, 50);
@@ -91,7 +91,7 @@ void user::create() {
 		smoothBlendFactor(0.1);
 		smoothUnionBegin();
 			rotate(0, 0, 50);
-			cylinder(1.4, 2.2, 2.0, 0.18, 1.75);
+			cylinder(1.4f, 2.2f, 2.0f, 0.18f, 1.75f);
 			rotateZ(110);
 			cylinder(3., 3.3, 2.0, 0.07, 0.2);
 			rotateZ(60);
@@ -107,11 +107,11 @@ void user::create() {
 	rotate(0, 0, 0);
 	createShapeBegin("tree");
 		color(70, 159, 70);
-		cone(0, 0, 0, 1., 0.8);
-		cone(0, -1, 0, 1.4, 1.0);
-		cone(0, -1.6, 0, 1.4, 1.2);
+		cone(0., 0., 0., 1., 0.8);
+		cone(0., -1., 0., 1.4, 1.0);
+		cone(0., -1.6, 0., 1.4, 1.2);
 		color(150, 70, 50);
-		cylinder(0, -2.0, 0, 0.4, 2.0);
+		cylinder(0., -2.0, 0., 0.4, 2.0);
 	createShapeEnd();
 
 	for (int i = 0; i < 5; i++) {

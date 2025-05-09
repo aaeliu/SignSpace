@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <cstdlib>
+#include <chrono>
 
 #include "printer.h"
 #include "scene.h"
@@ -171,6 +172,8 @@ int main () {
 
 	std::cout << "Beginning render loop.\n";
 	// Simple render loop. 
+
+	auto start = std::chrono::high_resolution_clock::now();
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -181,6 +184,11 @@ int main () {
 		// Pass in uniform variables.
 		GLint camTransformLocation = glGetUniformLocation(shaderProgram, "camTransform");
 		glUniform3f(camTransformLocation, cam_x, cam_y, cam_z);
+
+		auto now = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+		GLint timeLocation = glGetUniformLocation(shaderProgram, "time");
+		glUniform1f(timeLocation, duration.count() / 100.);
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);

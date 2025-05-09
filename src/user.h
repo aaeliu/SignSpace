@@ -1,6 +1,7 @@
 #pragma once
 #include <stack>
 #include "scene.h"
+#include "time.h"
 
 struct user {
 	scene* context;
@@ -22,7 +23,7 @@ struct user {
 	void create();
 
 	void background(int g);
-	void background(int r, int g, int b);
+	void background(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b);
 
 	void color (int r, int g, int b);
 	void lightColor(int r, int g, int b); // white by default.

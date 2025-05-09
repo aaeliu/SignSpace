@@ -16,13 +16,13 @@ void user::background(int g) {
 	background(g, g, g);
 }
 
-void user::background(int r, int g, int b) {
-	context->background = Color::Color(r, g, b);
+void user::background(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
+	context->background = std::make_shared<Color>(r, g, b);
 
 }
 
 void user::ambientColor(int r, int g, int b) {
-	context->ambient_color = Color::Color(r, g, b);
+	// context->ambient_color = Color::Color(r, g, b);
 }
 
 void user::color(int r, int g, int b) {

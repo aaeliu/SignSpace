@@ -1,18 +1,19 @@
 #pragma once
 #include <sstream>
+#include "time.h"
 
 struct Color {
-	float r, g, b;
-	int r_i, g_i, b_i;
-	Color(int r_, int g_, int b_) : r_i(r_), g_i(g_), b_i(b_) {
-		r = r_ / 255.0f;
-		g = g_ / 255.0f;
-		b = b_ / 255.0f;
+	TimeExpr r, g, b;
+	// TimeExpr r_i, g_i, b_i;
+	Color(const TimeExpr& r_, const TimeExpr& g_, const TimeExpr& b_) : r(r_/255.0f), g(g_/255.0f), b(b_/255.0f) {
+		//r = r_ / 255.0f;
+		//g = g_ / 255.0f;
+		//b = b_ / 255.0f;
 	}
 
-	bool operator==(const Color& other) {
+	/*bool operator==(const Color& other) {
 		return (r_i == other.r_i && g_i == other.g_i && b_i == other.b_i);
-	}
+	}*/
 
 	std::string print() {
 		std::stringstream ss;
