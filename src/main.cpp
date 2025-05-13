@@ -188,7 +188,7 @@ int main () {
 		auto now = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
 		GLint timeLocation = glGetUniformLocation(shaderProgram, "time");
-		glUniform1f(timeLocation, duration.count() / 100.);
+		glUniform1f(timeLocation, duration.count() / 1000.);
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);

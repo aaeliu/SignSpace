@@ -12,7 +12,7 @@ void user::create_and_check() {
 	ASSERT(combination_stack.empty(), "Unclosed combination operation (Hint: if you call [combination]Begin(), you must call [combination]End().");
 }
 
-void user::background(int g) {
+void user::background(const TimeExpr& g) {
 	background(g, g, g);
 }
 
@@ -21,15 +21,15 @@ void user::background(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
 
 }
 
-void user::ambientColor(int r, int g, int b) {
-	// context->ambient_color = Color::Color(r, g, b);
+void user::ambientColor(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
+	context->ambient_color = std::make_shared<Color>(r * context->ambient_factor, g * context->ambient_factor, b * context->ambient_factor);
 }
 
-void user::color(int r, int g, int b) {
+void user::color(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
 	current_color = std::make_shared<Color>(r, g, b);
 }
 
-void user::lightColor(int r, int g, int b) {
+void user::lightColor(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
 	current_light_color = std::make_shared<Color>(r, g, b);
 }
 
@@ -56,32 +56,32 @@ void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	}
 }
 
-std::shared_ptr<IR::primitive> user::sphere(float x, float y, float z, float r) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::sphere>(x, y, -z, r);
+std::shared_ptr<IR::primitive> user::sphere(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::sphere>(x, y, z * -1, r);
 	_default_prim_construct(s);
 	
 	return s;
 }
-std::shared_ptr<IR::primitive> user::box(float x, float y, float z, float l, float w, float h) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::box>(x, y, -z, l, w, h);
+std::shared_ptr<IR::primitive> user::box(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& l, const TimeExpr& w, const TimeExpr& h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::box>(x, y, z * -1, l, w, h);
 	_default_prim_construct(s);
 	return s;
 }
 
-std::shared_ptr<IR::primitive> user::cone(float x, float y, float z, float r, float h) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cone>(x, y, -z, r, 2 * h);
+std::shared_ptr<IR::primitive> user::cone(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r, const TimeExpr& h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cone>(x, y, z * -1, r, h * 2);
 	_default_prim_construct(s);
 	return s;
 }
 
-std::shared_ptr<IR::primitive> user::torus(float x, float y, float z, float R, float r) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::torus>(x, y, -z, R, r);
+std::shared_ptr<IR::primitive> user::torus(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& R, const TimeExpr& r) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::torus>(x, y, z * -1, R, r);
 	_default_prim_construct(s);
 	return s;
 }
 
-std::shared_ptr<IR::primitive> user::cylinder(float x, float y, float z, float r, float h) {
-	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cylinder>(x, y, -z, r, h);
+std::shared_ptr<IR::primitive> user::cylinder(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r, const TimeExpr& h) {
+	std::shared_ptr<IR::primitive> s = std::make_shared<IR::cylinder>(x, y, z * -1, r, h);
 	_default_prim_construct(s);
 	return s;
 }

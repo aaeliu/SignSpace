@@ -5,13 +5,12 @@
 #include <vector>
 #include "color.h"
 
-
 namespace IR {
 	struct primitive {
-		float x, y, z;
+		TimeExpr x, y, z;
 		float rot_x =0, rot_y=0, rot_z=0;
 		// float trans_x = 0, trans_y = 0, trans_z = 0;
-		primitive(float x_, float y_, float z_): x(x_), y(y_), z(z_) {};
+		primitive(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_): x(x_), y(y_), z(z_) {};
 		primitive() = default;
 		virtual ~primitive() = default;
 
@@ -23,7 +22,7 @@ namespace IR {
 		bool is_custom  = false;
 
 		std::shared_ptr <Color> col;
-		std::string print_vec3(float a, float b, float c) const {
+		std::string print_vec3(const TimeExpr& a, const TimeExpr& b, const TimeExpr& c) const {
 			std::stringstream ss;
 			ss << "vec3(" << a << ", " << b << ", " << c << ")";
 			return ss.str();
@@ -37,38 +36,38 @@ namespace IR {
 	};
 
 	struct sphere : public primitive {
-		float r;
-		sphere(float x_, float y_, float z_, float r_) : primitive(x_,y_,z_), r(r_) {};
+		TimeExpr r;
+		sphere(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_) : primitive(x_,y_,z_), r(r_) {};
 		~sphere() override = default;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
 
 	struct box : public primitive {
-		float l, w, h;
-		box(float x_, float y_, float z_, float l_, float w_, float h_) : primitive(x_, y_, z_),
+		TimeExpr l, w, h;
+		box(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& l_, const TimeExpr& w_, const TimeExpr& h_) : primitive(x_, y_, z_),
 																		  l(l_), w(w_), h(h_) {};
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
 
 	struct cone : public primitive {
-		float r, h;
-		cone(float x_, float y_, float z_, float r_, float h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		TimeExpr r, h;
+		cone(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
 
 	struct torus : public primitive {
-		float R, r;
-		torus(float x_, float y_, float z_, float R_, float r_) : primitive(x_, y_, z_), R(R_), r(r_) {};
+		TimeExpr R, r;
+		torus(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& R_, const TimeExpr& r_) : primitive(x_, y_, z_), R(R_), r(r_) {};
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
 
 	struct cylinder : public primitive {
-		float r, h;
-		cylinder(float x_, float y_, float z_, float r_, float h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		TimeExpr r, h;
+		cylinder(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};

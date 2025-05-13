@@ -11,6 +11,7 @@ struct TimeExprNode {
 	virtual std::string str() const = 0;
 
 	virtual bool isNum() const = 0;
+	virtual bool isMul() const = 0;
 };
 
 struct TimeExpr {
@@ -38,17 +39,21 @@ struct TimeExpr {
 
 	// std::ostream& operator<<(std::ostream& stream);
 	friend std::ostream& operator<<(std::ostream& stream, const TimeExpr& t) {
-		std::cout << "begin printing TimeExpr object\n";
 		stream << t.expr->str();
-		std::cout << "end printing TimeExpr object\n";
 		return stream;
 	}
 	// std::string str() {}
 	// void print(std::ostream& stream);
 
+	TimeExpr operator=(const TimeExpr& other) const {
+		return other;
+	}
+
 	TimeExpr operator+(const TimeExpr& other) const;
+	TimeExpr operator-() const;
 	TimeExpr operator/(const TimeExpr& other) const;
 	TimeExpr operator*(const TimeExpr& other) const;
+
 
 };
 
@@ -60,6 +65,18 @@ struct Add : public TimeExprNode {
 	~Add() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
+
+};
+
+struct Neg : public TimeExprNode {
+	TimeExpr t_;
+
+	Neg(const TimeExpr& t) : t_(t) {}
+	~Neg() override = default;
+	std::string  str() const override;
+	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
 
 };
 
@@ -70,6 +87,7 @@ struct Div : public TimeExprNode {
 	~Div() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
 
 };
 
@@ -80,6 +98,7 @@ struct Mul : public TimeExprNode {
 	~Mul() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
+	bool isMul() const override { return true; }
 
 };
 
@@ -89,6 +108,7 @@ struct Sin : public TimeExprNode {
 	~Sin() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
 
 };
 
@@ -96,11 +116,26 @@ inline TimeExpr sin(const TimeExpr& t) {
 	return TimeExpr(std::make_shared<Sin>(t));
 }
 
+struct Cos : public TimeExprNode {
+	TimeExpr t;
+	Cos(const TimeExpr& t_) : t(t_) {}
+	~Cos() override = default;
+	std::string  str() const override;
+	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
+
+};
+
+inline TimeExpr cos(const TimeExpr& t) {
+	return TimeExpr(std::make_shared<Cos>(t));
+}
+
 struct TimeVariable : public TimeExprNode {
 	TimeVariable() {}
 	~TimeVariable() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
 };
 
 struct Num : public TimeExprNode {
@@ -109,5 +144,6 @@ struct Num : public TimeExprNode {
 	~Num() override = default;
 	std::string str() const override;
 	bool isNum() const override { return true; }
+	bool isMul() const override { return false; }
 };
 extern struct TimeExpr t;

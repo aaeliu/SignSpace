@@ -10,8 +10,4 @@ scene::scene() {
 			shapes.push_back(p);
 	}
 
-	// FIX THIS
-	// ambient_color.r *= ambient_factor;
-	// ambient_color.g *= ambient_factor;
-	// ambient_color.b *= ambient_factor;
 }

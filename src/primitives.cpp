@@ -5,17 +5,6 @@
 
 std::string IR::primitive::print_center_with_rotations() const {
 	return print_center_with_transform(0, 0, 0);
-	/* std::string c = "p - " + print_center();
-	if (rot_z != 0) {
-		c = "rotate_z(" + c + "," + std::to_string(rot_z) + ")";
-	}
-	if (rot_y != 0) {
-		c = "rotate_y(" + c + "," + std::to_string(rot_y) + ")";
-	}
-	if (rot_x != 0) {
-		c = "rotate_x(" + c + "," + std::to_string(rot_x) + ")";
-	}
-	return c;*/
 }
 
 std::string IR::primitive::print_center_with_transform(float tx, float ty, float tz) const {

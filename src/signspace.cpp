@@ -41,16 +41,16 @@ void user::create() {
 
 	color(150, 0, 10);
 	sphere(-2, -2, -2, 1.3);
-	color(0, 200, 0);
+	color(0, 200, 0);S
 
 	smoothUnionBegin();
 	box(-2, -0.65, -2.3, 0.2, 0.2, 0.2);
 	box(-1.88, -0.65, -2.3, 0.2, 0.2, 0.2);
 	smoothUnionEnd();*/
 	
-	// ambientColor(7, 5, 100);
+	ambientColor( (sin(t) + 1.f) * 50.f + 7.f, 5, 100);
 	background(sin(t) * 120, 5, t + 3);
-	/*directionalLight(0.4, -1, 0.4, 0.2);
+	directionalLight(0.4, -1, 0.4, 0.2);
 	lightColor(30, 30, 255);
 	directionalLight(0., -1, 0., 0.05);
 
@@ -61,10 +61,11 @@ void user::create() {
 
 	// SNOWMAN BODY
 	color(230, 230, 240);
+	// color(230, (sin(t) + 1.f) * 120 + 120, 240);
 	smoothBlendFactor(0.2);
 	smoothUnionBegin();
 		box(0., -2.75, 0.0,20., 0.75, 20.);
-		sphere(0., -0.75, 2.0, 2.);
+		sphere(0., -0.75, sin(t) + 1, 2.);
 		sphere(-0.15, 1.25, 2.0, 1.5);
 		sphere(-0.3, 3.2, 2.0, 1.);
 	smoothUnionEnd();

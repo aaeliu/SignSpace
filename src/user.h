@@ -22,12 +22,12 @@ struct user {
 	void create_and_check();
 	void create();
 
-	void background(int g);
+	void background(const TimeExpr& g);
 	void background(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b);
 
-	void color (int r, int g, int b);
-	void lightColor(int r, int g, int b); // white by default.
-	void ambientColor(int r, int g, int b);
+	void color (const TimeExpr& r, const TimeExpr& g, const TimeExpr& b);
+	void lightColor(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b); // white by default.
+	void ambientColor(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b);
 	// void color (std::shared_ptr<Color> c);
 
 	void _default_prim_construct(std::shared_ptr<IR::primitive> s);
@@ -39,35 +39,35 @@ struct user {
 	* @param[in] x,y,z:  coordinates of the sphere's center.
 	* @param[in] r:		 radius of the sphere.
 	*/
-	std::shared_ptr<IR::primitive> sphere (float x, float y, float z, float r);
+	std::shared_ptr<IR::primitive> sphere (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r);
 
 	/**
 	* Create a box.
 	* @param[in] x,y,z:  coordinates of the box's center
 	* @param[in] l,w,h:  the half-dimensions of the box.
 	*/
-	std::shared_ptr<IR::primitive> box (float x, float y, float z, float l, float w, float h);
+	std::shared_ptr<IR::primitive> box (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& l, const TimeExpr& w, const TimeExpr& h);
 
 	/**
 	* Create a cone.
 	* @param[in] x,y,z:  coordinates of the sphere's center.
 	* @param[in] r, h:   radius and half-height of cone.
 	*/
-	std::shared_ptr<IR::primitive> cone (float x, float y, float z, float r, float h);
+	std::shared_ptr<IR::primitive> cone (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r, const TimeExpr& h);
 
 	/**
 	* Create a cylinder.
 	* @param[in] x,y,z:  coordinates of the sphere's center.
 	* @param[in] r:		 radius of the sphere.
 	*/
-	std::shared_ptr<IR::primitive> cylinder (float x, float y, float z, float r, float h);
+	std::shared_ptr<IR::primitive> cylinder (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& r, const TimeExpr& h);
 
 	/**
 	* Create a torus.
 	* @param[in] x,y,z:  coordinates of the torus's center.
 	* @param[in] R, r:   big radius, inner radius.
 	*/
-	std::shared_ptr<IR::primitive> torus (float x, float y, float z, float R, float r);
+	std::shared_ptr<IR::primitive> torus (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& R, const TimeExpr& r);
 
 	std::shared_ptr<IR::primitive> shape (const std::string& name, float x, float y, float z);
 	// CUSTOM SHAPE CREATION
