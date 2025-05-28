@@ -18,10 +18,25 @@ namespace IR {
 		// Print with translation
 		virtual int print(std::ofstream& f, int n, float tx, float ty, float tz) const = 0;
 
-		virtual float get_bounding_rad() const = 0;
+		float get_dist() const {
+			float x_max = x.expr->getMax();
+			float x_min = x.expr->getMin();
+			float x = std::min(x_max * x_max, x_min * x_min);
 
-		bool to_combine = false;
+			float y_max = y.expr->getMax();
+			float y_min = y.expr->getMin();
+			float y = std::min(y_max * y_max, y_min * y_min);
+
+			float z_max = z.expr->getMax();
+			float z_min = z.expr->getMin();
+			float z = std::min(z_max * z_max, z_min * z_min);
+			return sqrtf(x + y + z);
+		}
+		virtual float get_bounding_rad() const = 0;
+		virtual float get_bounding_dist() const = 0;
+
 		bool is_custom  = false;
+		bool is_combination = false;
 
 		std::shared_ptr <Color> col;
 		std::string print_vec3(const TimeExpr& a, const TimeExpr& b, const TimeExpr& c) const {
@@ -42,6 +57,7 @@ namespace IR {
 		sphere(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_) : primitive(x_,y_,z_), r(r_) {};
 		~sphere() override = default;
 		float get_bounding_rad() const override;
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -51,6 +67,7 @@ namespace IR {
 		box(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& l_, const TimeExpr& w_, const TimeExpr& h_) : primitive(x_, y_, z_),
 																		  l(l_), w(w_), h(h_) {};
 		float get_bounding_rad() const override;
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -59,6 +76,7 @@ namespace IR {
 		TimeExpr r, h;
 		cone(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
 		float get_bounding_rad() const override;
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -67,6 +85,7 @@ namespace IR {
 		TimeExpr R, r;
 		torus(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& R_, const TimeExpr& r_) : primitive(x_, y_, z_), R(R_), r(r_) {};
 		float get_bounding_rad() const override;
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -75,6 +94,7 @@ namespace IR {
 		TimeExpr r, h;
 		cylinder(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
 		float get_bounding_rad() const override;
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -90,15 +110,23 @@ namespace IR {
 
 	struct combination : public primitive {
 		std::vector <std::shared_ptr<primitive>> shapes;
-		combination() = default;
+		combination() { is_combination = true; };
 		float get_bounding_rad() const override { return 0.0f; };
+		float get_bounding_dist() const override { 
+			float d = 0;
+			for (const auto& shape : shapes) {
+				float d_ = shape->get_bounding_dist();
+				d = std:: max(d, d_);
+			}
+			return d; 
+		}
 		virtual ~combination() = default;
 		virtual comb_type get_comb_type() const = 0;
 	};
 
 	struct smooth_union : public combination {
 		const TimeExpr& blend_factor = 0.25;
-		smooth_union() { }
+		smooth_union() : combination() { }
 		comb_type get_comb_type() const override  { return comb_type::SMOOTH_UNION; }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
@@ -106,7 +134,7 @@ namespace IR {
 
 	// if we have subtraction on a, b, c, d, e... result is a - b - c - d - e
 	struct subtraction : public combination {
-		subtraction() {}
+		subtraction() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
@@ -114,14 +142,14 @@ namespace IR {
 
 	struct smooth_subtraction : public combination {
 		const TimeExpr& blend_factor = 0.25;
-		smooth_subtraction() {}
+		smooth_subtraction() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
 
 	struct intersection : public combination {
-		intersection() {}
+		intersection() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
@@ -129,7 +157,7 @@ namespace IR {
 
 	struct smooth_intersection : public combination {
 		const TimeExpr& blend_factor = 0.25;
-		smooth_intersection () {}
+		smooth_intersection() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
@@ -139,12 +167,11 @@ namespace IR {
 		std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> shapes;
 		float bounding_rad;
 		float tx, ty, tz;
-		//bool is_custom = true;
 
 		custom_shape() {
 			shapes = std::make_shared <std::vector<std::shared_ptr<IR::primitive>>>();
+			is_custom = true;
 		}
-
 		custom_shape(std::shared_ptr<IR::custom_shape> s, float tx_, float ty_, float tz_) : primitive (tx_, ty_, tz_), 
 																								tx(tx_), ty(ty_), tz(tz_) {
 			shapes = s->shapes;
@@ -152,6 +179,7 @@ namespace IR {
 			is_custom = true;
 		}
 
+		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		float get_bounding_rad() const override { return bounding_rad;  }
 		void generate_bounding_sphere ();
 

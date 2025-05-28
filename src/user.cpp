@@ -46,7 +46,8 @@ void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	s->rot_y = current_rot_y;
 	s->rot_z = current_rot_z;
 	if (!combination_stack.empty()) {
-		ASSERT(!s->is_custom, "Combination operations will not work with custom shapes.");
+		// std::cout << "Meow" << ;
+		ASSERT(!s->is_custom, "Cannot create a custom shape within a combination operator.");
 		combination_stack.top()->shapes.push_back(s);
 	}
 	else if (current_custom_shape != nullptr) {
@@ -219,7 +220,9 @@ void user::createShapeBegin(const std::string& name) {
 }
 void user::createShapeEnd() {
 	ASSERT(current_custom_shape != nullptr, "No shape is currently being created.");
+	std::cout << "raghh" << std::endl;
 	current_custom_shape->generate_bounding_sphere();
+	//std::cout << "MEow" << std::endl;
 	current_custom_shape = nullptr;
 	current_custom_shape_name = "";
 }

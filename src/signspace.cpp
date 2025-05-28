@@ -109,9 +109,11 @@ void user::create() {
 	rotate(0, 0, 0);
 	createShapeBegin("tree");
 		color(70, 159, 70);
-		cone(0., 0., 0., 1., 0.8);
-		cone(0., -1., 0., 1.4, 1.0);
-		cone(0., -1.6, 0., 1.4, 1.2);
+		smoothUnionBegin();
+			cone(0., 0., 0., 1., 0.8);
+			cone(0., -1., 0., 1.4, 1.0);
+			cone(0., -1.6, 0., 1.4, 1.2);
+		smoothUnionEnd();
 		color(150, 70, 50);
 		cylinder(0., -2.0, 0., 0.4, 2.0);
 	createShapeEnd();

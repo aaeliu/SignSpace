@@ -325,22 +325,8 @@ void IR::custom_shape::generate_bounding_sphere() {
 	// add that distance to the half-radius of the primitive's bounding sphere...
 
 	for (const auto& shape : *shapes) {
-		float x_max = shape->x.expr->getMax();
-		float x_min = shape->x.expr->getMin();
-		float x = std::min(x_max * x_max, x_min * x_min);
-
-		float y_max = shape->y.expr->getMax();
-		float y_min = shape->y.expr->getMin();
-		float y = std::min(y_max * y_max, y_min * y_min);
-
-		float z_max = shape->z.expr->getMax();
-		float z_min = shape->z.expr->getMin();
-		float z = std::min(z_max * z_max, z_min * z_min);
-
-		float dist = sqrtf(x + y + z) + shape->get_bounding_rad ();
-		std::cout << "debug; dist: " << dist << std::endl;
-		if (dist > bounding_rad)
-			bounding_rad = dist;
+		bounding_rad = std::max(shape->get_bounding_dist(), bounding_rad);
+		std::cout << "debug; dist: " << bounding_rad << std::endl;
 
 	}
 
