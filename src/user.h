@@ -6,8 +6,8 @@
 struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;
-	std::map <std::string, std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>>> custom_shapes;
-	float current_blend_factor = 0.25f;
+	std::map <std::string, std::shared_ptr<IR::custom_shape>> custom_shapes;
+	const TimeExpr& current_blend_factor = 0.25f;
 	user(scene* c);
 
 	float current_rot_x = 0.0f;
@@ -16,7 +16,7 @@ struct user {
 
 	std::shared_ptr <Color> current_color = std::make_shared <Color>(128, 128, 128); 
 	std::shared_ptr <Color> current_light_color = std::make_shared <Color>(255, 255, 255);
-	std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> current_custom_shape = nullptr;
+	std::shared_ptr<IR::custom_shape> current_custom_shape = nullptr;
 	std::string current_custom_shape_name = "";
 
 	void create_and_check();
@@ -79,7 +79,7 @@ struct user {
 	/**
 	* Adjust how smoothly smooth combination operations will combine shapes together.
 	*/
-	void smoothBlendFactor(float k);
+	void smoothBlendFactor(const TimeExpr& k);
 
 	/**
 	*	Begin a smooth union operation. All shapes enclosed between smoothUnionBegin()

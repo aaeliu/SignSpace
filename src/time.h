@@ -50,6 +50,7 @@ struct TimeExpr {
 	}
 
 	TimeExpr operator+(const TimeExpr& other) const;
+	TimeExpr operator-(const TimeExpr& other) const;
 	TimeExpr operator-() const;
 	TimeExpr operator/(const TimeExpr& other) const;
 	TimeExpr operator*(const TimeExpr& other) const;
@@ -57,12 +58,31 @@ struct TimeExpr {
 
 };
 
+inline TimeExpr operator+(float f, const TimeExpr& other) {
+	return (other + f);
+}
+
+inline TimeExpr operator*(float f, const TimeExpr& other) {
+	return (other * f);
+}
+
 
 struct Add : public TimeExprNode {
 	TimeExpr lhs, rhs;
 
 	Add(const TimeExpr& a, const TimeExpr& b) : lhs(a), rhs(b) {}
 	~Add() override = default;
+	std::string  str() const override;
+	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
+
+};
+
+struct Subtract : public TimeExprNode {
+	TimeExpr lhs, rhs;
+
+	Subtract(const TimeExpr& a, const TimeExpr& b) : lhs(a), rhs(b) {}
+	~Subtract() override = default;
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
@@ -140,7 +160,7 @@ struct TimeVariable : public TimeExprNode {
 
 struct Num : public TimeExprNode {
 	float val;
-	Num(float v_) : val(v_) { std::cout << "val: " << v_ << "\n"; }
+	Num(float v_) : val(v_) {  }
 	~Num() override = default;
 	std::string str() const override;
 	bool isNum() const override { return true; }

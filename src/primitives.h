@@ -89,7 +89,7 @@ namespace IR {
 	};
 
 	struct smooth_union : public combination {
-		float blend_factor = 0.25;
+		const TimeExpr& blend_factor = 0.25;
 		smooth_union() { }
 		comb_type get_comb_type() const override  { return comb_type::SMOOTH_UNION; }
 		int print(std::ofstream& f, int n) const override;
@@ -105,7 +105,7 @@ namespace IR {
 	};
 
 	struct smooth_subtraction : public combination {
-		float blend_factor = 0.25;
+		const TimeExpr& blend_factor = 0.25;
 		smooth_subtraction() {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
@@ -120,7 +120,7 @@ namespace IR {
 	};
 
 	struct smooth_intersection : public combination {
-		float blend_factor = 0.25;
+		const TimeExpr& blend_factor = 0.25;
 		smooth_intersection () {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
@@ -129,12 +129,28 @@ namespace IR {
 
 	struct custom_shape : public primitive {
 		std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> shapes;
+		float bounding_rad;
 		float tx, ty, tz;
 		// bool is_custom = true;
-		custom_shape(std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> s, float tx_, float ty_, float tz_) : 
+
+		custom_shape() {
+			shapes = std::make_shared <std::vector<std::shared_ptr<IR::primitive>>>();
+		}
+
+		/*custom_shape(std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> s, float tx_, float ty_, float tz_) :
 			shapes(s), tx(tx_), ty(ty_), tz(tz_) {
 			is_custom = true;
-		};
+		};*/
+
+		custom_shape(std::shared_ptr<IR::custom_shape> s, float tx_, float ty_, float tz_) : primitive (tx_, ty_, tz_), 
+																								tx(tx_), ty(ty_), tz(tz_) {
+			shapes = s->shapes;
+			bounding_rad = s->bounding_rad;
+			is_custom = true;
+		}
+
+		void generate_bounding_sphere ();
+
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};

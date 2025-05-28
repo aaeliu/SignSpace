@@ -9,15 +9,14 @@ TimeExpr t = TimeExpr(std::make_shared<TimeVariable>());
 *  the time variable...
 */
 
-/*TimeExprNode::TimeExprNode(const TimeExprNode& x) {
-	std::cout << "not int "  << std::endl;
-}*/
-
 TimeExpr::TimeExpr(float x) {
 	expr = std::make_shared<Num>(x);
 }
 TimeExpr TimeExpr::operator+(const TimeExpr& other) const {
 	return TimeExpr(std::make_shared<Add>(*this, other));
+}
+TimeExpr TimeExpr::operator-(const TimeExpr& other) const {
+	return TimeExpr(std::make_shared<Subtract>(*this, other));
 }
 
 TimeExpr TimeExpr::operator/(const TimeExpr& other) const {
@@ -40,11 +39,11 @@ TimeExpr TimeExpr::operator-() const {
 
 TimeExpr TimeExpr::operator*(const TimeExpr& other) const {
 	if (other.expr->isNum()) {
-		std::cout << "TEST2" << std::static_pointer_cast<Num>(other.expr)->val << "\n";
+		//std::cout << "TEST2" << std::static_pointer_cast<Num>(other.expr)->val << "\n";
 		if (expr->isMul()) {
 			std::shared_ptr<Mul> mul_expr = std::static_pointer_cast<Mul> (expr);
 			std::shared_ptr<Num> num_expr;
-			std::cout << "TEST\n";
+			//std::cout << "TEST\n";
 			if (mul_expr->lhs.expr->isNum()) {
 				num_expr = std::static_pointer_cast<Num> (mul_expr->lhs.expr);
 				num_expr->val *= std::static_pointer_cast<Num>(other.expr)->val;
@@ -56,23 +55,18 @@ TimeExpr TimeExpr::operator*(const TimeExpr& other) const {
 				return *this;
 			}
 		}
-		std::cout << "TEST3\n";
+		//std::cout << "TEST3\n";
 	}
 	return TimeExpr(std::make_shared<Mul>(*this, other));
 }
-/*std::ostream& TimeExpr::operator<<(std::ostream& stream) {
-	stream << "meow";
-	return stream;
-	print(stream);
-}*/
-/*std::stringstream& TimeExpr::operator<<(std::stringstream& stream, const TimeExpr& t) {
-	stream << "meow";
-	return stream;
-	print(stream);
-}*/
 
 std::string Add::str() const {
 	return '(' + lhs.expr->str() + '+' + rhs.expr->str() + ')';
+
+}
+
+std::string Subtract::str() const {
+	return '(' + lhs.expr->str() + '-' + rhs.expr->str() + ')';
 
 }
 

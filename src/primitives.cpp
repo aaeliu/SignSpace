@@ -23,7 +23,7 @@ std::string IR::primitive::print_center_with_transform(float tx, float ty, float
 
 
 int IR::sphere::print(std::ofstream& f, int d) const {
-	// note: there is no point in rotating a sphere. like, cause like yknow it's like yknow like yknow???
+	// note: there is no point in rotating a sphere
 	f << "	float d" << d << " = sdSphere(p - " << print_center() << ", " << r << ");" << std::endl;
 	return d;
 }
@@ -228,6 +228,11 @@ int IR::smooth_intersection::print(std::ofstream& f, int d, float tx, float ty, 
 }
 
 int IR::custom_shape::print(std::ofstream& f, int d) const {
+
+	f << "db = sdSphere(p -" << print_center() << ", " << bounding_rad << ");" << std::endl;
+	f << "sdf_ = sdf;" << std::endl;
+	f << "if (db < 0.001) {" << std::endl;
+
 	d = (*shapes)[0]->print(f, d, tx, ty, tz);
 	f << "   sdf_ = vec4(d" << d << ", " << (*shapes)[0]->col->print() << ");" << std::endl;
 
@@ -237,10 +242,12 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 
 		f << "	sdf_ " << " = opUnion(sdf_" << ", vec4(d" << d << ", " << shape->col->print() << ")); " << std::endl;
 	}
+	f << "}" << std::endl;
 	return d;
 }
 
 int IR::custom_shape::print (std::ofstream& f, int d, float tx, float ty, float tz) const {
+	f << "db = sdSphere(p -" << print_center() << ", " << bounding_rad << ");" << std::endl;
 	d = (*shapes)[0]->print(f, d, tx, ty, tz);
 	f << "   sdf_ = vec4(d" << d << ", " << (*shapes)[0]->col->print() << ");" << std::endl;
 
@@ -274,4 +281,8 @@ int IR::point_light::print(std::ofstream& f) const {
 	f << "	LdotN = clamp(dot(L, N), 0., 1.);" << std::endl;
 	f << "	col += Cd * CL * LdotN * shadL;" << std::endl;
 	return 1;
+}
+
+void IR::custom_shape::generate_bounding_sphere() {
+	bounding_rad = 3.8f;
 }

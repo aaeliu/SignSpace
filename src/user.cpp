@@ -50,7 +50,7 @@ void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 		combination_stack.top()->shapes.push_back(s);
 	}
 	else if (current_custom_shape != nullptr) {
-		current_custom_shape->push_back(s);
+		current_custom_shape->shapes->push_back(s);
 	} else {
 		objects_temp.push_back(s);
 	}
@@ -93,7 +93,7 @@ std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> 
 	return smoothUnion(smoothUnion(p1, p2), rest);
 }*/
 
-void user::smoothBlendFactor(float k) {
+void user::smoothBlendFactor(const TimeExpr& k) {
 	current_blend_factor = k;
 }
 
@@ -212,13 +212,14 @@ void user::createShapeBegin(const std::string& name) {
 	ASSERT(combination_stack.empty(), "Cannot create shape inside combation operator.");
 	ASSERT(current_custom_shape == nullptr, "Cannot create new shape while other shape is being created.");
 	ASSERT(name != "", "Invalid name for shape");
-	current_custom_shape = std::make_shared<std::vector<std::shared_ptr<IR::primitive>>>();
+	current_custom_shape = std::make_shared<IR::custom_shape>();
 	current_custom_shape_name = name;
 	custom_shapes[name] = current_custom_shape;
 
 }
 void user::createShapeEnd() {
 	ASSERT(current_custom_shape != nullptr, "No shape is currently being created.");
+	current_custom_shape->generate_bounding_sphere();
 	current_custom_shape = nullptr;
 	current_custom_shape_name = "";
 }
