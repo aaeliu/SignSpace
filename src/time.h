@@ -12,6 +12,9 @@ struct TimeExprNode {
 
 	virtual bool isNum() const = 0;
 	virtual bool isMul() const = 0;
+
+	virtual float getMin() const = 0;
+	virtual float getMax() const = 0;
 };
 
 struct TimeExpr {
@@ -76,6 +79,9 @@ struct Add : public TimeExprNode {
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
 
+	float getMin() const override { return lhs.expr->getMin() + rhs.expr->getMin(); }
+	float getMax() const override { return lhs.expr->getMax() + rhs.expr->getMax(); }
+
 };
 
 struct Subtract : public TimeExprNode {
@@ -86,6 +92,9 @@ struct Subtract : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+
+	float getMin() const override { return lhs.expr->getMin() - rhs.expr->getMax(); }
+	float getMax() const override { return lhs.expr->getMax() - rhs.expr->getMin(); }
 
 };
 
@@ -98,6 +107,9 @@ struct Neg : public TimeExprNode {
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
 
+	float getMin() const override { return -t_.expr->getMax(); }
+	float getMax() const override { return -t_.expr->getMin(); }
+
 };
 
 struct Div : public TimeExprNode {
@@ -108,6 +120,9 @@ struct Div : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+
+	float getMin() const override { return lhs.expr->getMin() / rhs.expr->getMax(); }
+	float getMax() const override { return lhs.expr->getMax() / rhs.expr->getMin(); }
 
 };
 
@@ -120,6 +135,9 @@ struct Mul : public TimeExprNode {
 	bool isNum() const override { return false; }
 	bool isMul() const override { return true; }
 
+	float getMin() const override { return lhs.expr->getMin() * rhs.expr->getMin(); }
+	float getMax() const override { return lhs.expr->getMax() * rhs.expr->getMax(); }
+
 };
 
 struct Sin : public TimeExprNode {
@@ -129,6 +147,9 @@ struct Sin : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+
+	float getMin() const override { return -1; }
+	float getMax() const override { return 1; }
 
 };
 
@@ -144,6 +165,9 @@ struct Cos : public TimeExprNode {
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
 
+	float getMin() const override { return -1; }
+	float getMax() const override { return 1; }
+
 };
 
 inline TimeExpr cos(const TimeExpr& t) {
@@ -156,6 +180,9 @@ struct TimeVariable : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+
+	float getMin() const override { return 0; }
+	float getMax() const override { return FLT_MAX; }
 };
 
 struct Num : public TimeExprNode {
@@ -165,5 +192,8 @@ struct Num : public TimeExprNode {
 	std::string str() const override;
 	bool isNum() const override { return true; }
 	bool isMul() const override { return false; }
+
+	float getMin() const override { return val; }
+	float getMax() const override { return val; }
 };
 extern struct TimeExpr t;

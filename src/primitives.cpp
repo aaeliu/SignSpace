@@ -283,6 +283,67 @@ int IR::point_light::print(std::ofstream& f) const {
 	return 1;
 }
 
+/* Collection of methods to assist with calculate bounding sphere volumes etc
+*/
+
+float IR::sphere::get_bounding_rad() const {
+	return r.expr->getMax();
+}
+
+float IR::box::get_bounding_rad() const {
+	float l_ = l.expr->getMax();
+	float w_ = w.expr->getMax();
+	float h_ = h.expr->getMax();
+	return 0.5 * sqrtf(
+		l_ * l_ +
+		w_ * w_ +
+		h_ * h_
+	);
+}
+
+float IR::cone::get_bounding_rad() const {
+	float r_ = r.expr->getMax();
+	float h_ = 0.5 * h.expr->getMax();
+
+	return sqrtf (r_ * r_ + h_ * h_);
+}
+
+float IR::torus::get_bounding_rad() const {
+	return R.expr->getMax();
+}
+
+float IR::cylinder::get_bounding_rad() const {
+	float r_ = r.expr->getMax();
+	float h_ = h.expr->getMax();
+
+	return sqrtf(r_ * r_ + h_ * h_);
+}
+
 void IR::custom_shape::generate_bounding_sphere() {
-	bounding_rad = 3.8f;
+
+	// For all shapes, calculate the distance from center to (0, 0, 0) and then 
+	// add that distance to the half-radius of the primitive's bounding sphere...
+
+	for (const auto& shape : *shapes) {
+		float x_max = shape->x.expr->getMax();
+		float x_min = shape->x.expr->getMin();
+		float x = std::min(x_max * x_max, x_min * x_min);
+
+		float y_max = shape->y.expr->getMax();
+		float y_min = shape->y.expr->getMin();
+		float y = std::min(y_max * y_max, y_min * y_min);
+
+		float z_max = shape->z.expr->getMax();
+		float z_min = shape->z.expr->getMin();
+		float z = std::min(z_max * z_max, z_min * z_min);
+
+		float dist = sqrtf(x + y + z) + shape->get_bounding_rad ();
+		std::cout << "debug; dist: " << dist << std::endl;
+		if (dist > bounding_rad)
+			bounding_rad = dist;
+
+	}
+
+	std::cout << "bounding_rad: " << bounding_rad << std::endl;
+	// bounding_rad = 3.8f;
 }

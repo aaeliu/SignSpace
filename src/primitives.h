@@ -18,6 +18,8 @@ namespace IR {
 		// Print with translation
 		virtual int print(std::ofstream& f, int n, float tx, float ty, float tz) const = 0;
 
+		virtual float get_bounding_rad() const = 0;
+
 		bool to_combine = false;
 		bool is_custom  = false;
 
@@ -39,6 +41,7 @@ namespace IR {
 		TimeExpr r;
 		sphere(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_) : primitive(x_,y_,z_), r(r_) {};
 		~sphere() override = default;
+		float get_bounding_rad() const override;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -47,6 +50,7 @@ namespace IR {
 		TimeExpr l, w, h;
 		box(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& l_, const TimeExpr& w_, const TimeExpr& h_) : primitive(x_, y_, z_),
 																		  l(l_), w(w_), h(h_) {};
+		float get_bounding_rad() const override;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -54,6 +58,7 @@ namespace IR {
 	struct cone : public primitive {
 		TimeExpr r, h;
 		cone(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		float get_bounding_rad() const override;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -61,6 +66,7 @@ namespace IR {
 	struct torus : public primitive {
 		TimeExpr R, r;
 		torus(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& R_, const TimeExpr& r_) : primitive(x_, y_, z_), R(R_), r(r_) {};
+		float get_bounding_rad() const override;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -68,6 +74,7 @@ namespace IR {
 	struct cylinder : public primitive {
 		TimeExpr r, h;
 		cylinder(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& r_, const TimeExpr& h_) : primitive(x_, y_, z_), r(r_), h(h_) {};
+		float get_bounding_rad() const override;
 		int print(std::ofstream& f, int n) const override;
 		int print(std::ofstream& f, int n, float tx, float ty, float tz) const override;
 	};
@@ -84,6 +91,7 @@ namespace IR {
 	struct combination : public primitive {
 		std::vector <std::shared_ptr<primitive>> shapes;
 		combination() = default;
+		float get_bounding_rad() const override { return 0.0f; };
 		virtual ~combination() = default;
 		virtual comb_type get_comb_type() const = 0;
 	};
@@ -131,16 +139,11 @@ namespace IR {
 		std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> shapes;
 		float bounding_rad;
 		float tx, ty, tz;
-		// bool is_custom = true;
+		//bool is_custom = true;
 
 		custom_shape() {
 			shapes = std::make_shared <std::vector<std::shared_ptr<IR::primitive>>>();
 		}
-
-		/*custom_shape(std::shared_ptr<std::vector<std::shared_ptr<IR::primitive>>> s, float tx_, float ty_, float tz_) :
-			shapes(s), tx(tx_), ty(ty_), tz(tz_) {
-			is_custom = true;
-		};*/
 
 		custom_shape(std::shared_ptr<IR::custom_shape> s, float tx_, float ty_, float tz_) : primitive (tx_, ty_, tz_), 
 																								tx(tx_), ty(ty_), tz(tz_) {
@@ -149,6 +152,7 @@ namespace IR {
 			is_custom = true;
 		}
 
+		float get_bounding_rad() const override { return bounding_rad;  }
 		void generate_bounding_sphere ();
 
 		int print(std::ofstream& f, int n) const override;
