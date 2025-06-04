@@ -42,11 +42,13 @@ void user::lightColor(const TimeExpr& r, const TimeExpr& g, const TimeExpr& b) {
 /* applies state settings to newly constructed primitive... */
 void::user::_default_prim_construct(std::shared_ptr<IR::primitive> s) {
 	s->col = current_color;
-	s->rot_x = current_rot_x;
-	s->rot_y = current_rot_y;
-	s->rot_z = current_rot_z;
+	if (!current_rot_x.expr->isZero())
+		s->rot_x = current_rot_x;
+	if (!current_rot_y.expr->isZero())
+		s->rot_y = current_rot_y;
+	if (!current_rot_z.expr->isZero())
+		s->rot_z = current_rot_z;
 	if (!combination_stack.empty()) {
-		// std::cout << "Meow" << ;
 		ASSERT(!s->is_custom, "Cannot create a custom shape within a combination operator.");
 		combination_stack.top()->shapes.push_back(s);
 	}
@@ -86,13 +88,6 @@ std::shared_ptr<IR::primitive> user::cylinder(const TimeExpr& x, const TimeExpr&
 	_default_prim_construct(s);
 	return s;
 }
-
-/*template <typename ... prims>
-std::shared_ptr<IR::primitive> user::smoothUnion(std::shared_ptr<IR::primitive> p1, std::shared_ptr<IR::primitive> p2, const prims& ... rest) {
-	std::cout << "Meow??\n";
-	// return smoothUnion(p1, p2);
-	return smoothUnion(smoothUnion(p1, p2), rest);
-}*/
 
 void user::smoothBlendFactor(const TimeExpr& k) {
 	current_blend_factor = k;
@@ -187,24 +182,24 @@ void user::pointLight(float x, float y, float z, float i) {
 
 // TRANSFORMATIONAL 
 
-void user::rotateX(float degs) {
+void user::rotateX(const TimeExpr& degs) {
 	current_rot_x = degs * M_PI / 180.f;
 }
-void user::rotateY(float degs) {
+void user::rotateY(const TimeExpr& degs) {
 	current_rot_y = degs * M_PI / 180.f;
 }
-void user::rotateZ(float degs) {
+void user::rotateZ(const TimeExpr& degs) {
 	current_rot_z = degs * M_PI / 180.f;
 }
-void user::rotate(float degs_x, float degs_y, float degs_z) {
+void user::rotate(const TimeExpr& degs_x, const TimeExpr& degs_y, const TimeExpr& degs_z) {
 	rotateX(degs_x); rotateY(degs_y); rotateZ(degs_z);
 }
 
 // CUSTOM SHAPE CREATION!
-std::shared_ptr<IR::primitive> user::shape(const std::string& name, float x, float y, float z) {
+std::shared_ptr<IR::primitive> user::shape(const std::string& name, const TimeExpr& x, const TimeExpr& y, const TimeExpr& z) {
 	ASSERT(custom_shapes.find(name) != custom_shapes.end(), "A custom shape with this name does not exist!");
 	ASSERT(current_custom_shape_name != name, "Cannot instantiate the shape currently being created!");
-	ASSERT(current_custom_shape == nullptr, "This version of SignSpace currently does not support custom shapes within custom shapes.");
+	// ASSERT(current_custom_shape == nullptr, "This version of SignSpace currently does not support custom shapes within custom shapes.");
 	std::shared_ptr<IR::custom_shape> s = std::make_shared<IR::custom_shape>(custom_shapes[name], x, y, -z);
 	_default_prim_construct(s);
 	return s;
@@ -220,9 +215,7 @@ void user::createShapeBegin(const std::string& name) {
 }
 void user::createShapeEnd() {
 	ASSERT(current_custom_shape != nullptr, "No shape is currently being created.");
-	std::cout << "raghh" << std::endl;
 	current_custom_shape->generate_bounding_sphere();
-	//std::cout << "MEow" << std::endl;
 	current_custom_shape = nullptr;
 	current_custom_shape_name = "";
 }

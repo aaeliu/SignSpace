@@ -10,6 +10,8 @@
 #include "printer.h"
 #include "scene.h"
 
+#define GENERATE true
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -42,9 +44,12 @@ int main () {
 	}*/
 
 	const char* filename = "./Shaders/test.fs";
-	scene* s = new scene();
-	printer p(filename, s);
-	p.print();
+
+	if (GENERATE) {
+		scene* s = new scene();
+		printer p(filename, s);
+		p.print();
+	}
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

@@ -48,7 +48,7 @@ void user::create() {
 	box(-1.88, -0.65, -2.3, 0.2, 0.2, 0.2);
 	smoothUnionEnd();*/
 	
-	ambientColor( (1 + sin(t)) * 50.f + 7.f, 5, 100);
+	ambientColor( (1 + sin(t)) * 50.f + 20.f, 15, 100);
 	background(sin(t) * 120, 5, t + 3);
 	directionalLight(0.4, -1, 0.4, 0.2);
 
@@ -63,13 +63,20 @@ void user::create() {
 	// SNOWMAN BODY
 	color(230, 230, 240);
 	// color(230, (sin(t) + 1.f) * 120 + 120, 240);
+	box(0., -2.75, 0.0,20., 0.75, 20.);
+
+	createShapeBegin("snowman body");
 	smoothBlendFactor(cos(t));
 	smoothUnionBegin();
-		box(0., -2.75, 0.0,20., 0.75, 20.);
-		sphere(0., -0.75, sin(t) + 1, 2.);
-		sphere(-0.15, 1.25, 2.0, 1.5);
-		sphere(-0.3 * sin(t), 3.2, 2.0, 1.);
+		
+		sphere(0., -0.75, 0, 2.);
+		sphere(-0.15, 1.25, 0, 1.5);
+		sphere(-0.3 * sin(t), 3.2, 0, 1.);
 	smoothUnionEnd();
+	createShapeEnd();
+
+	// shape("snowman body", 0, 0, 2.0);
+	// shape("snowman body", 2.0, 0.0, 4.0);
 
 	// SNOWMAN EYE & BUTTONS
 	color(10, 10, 10);
@@ -79,26 +86,34 @@ void user::create() {
 	sphere(-0.75, 3.1, 1.15, 0.12); // Eye (left)
 
 	// SNOWMAN HAT
-	rotateZ(-15);
-	color(20, 20, 20);
-	cylinder(-0.4, 3.8, 2.0, 1.25, 0.1);
-	cylinder(-0.56, 4.6, 2.0, 1., 0.75);
+	createShapeBegin("snowman hat");
+		rotateZ(-15);
+		color(20, 20, 20);
+		cylinder(-0.4, 3.8, 0.0, 1.25, 0.1);
+		cylinder(-0.56, 4.6, 0.0, 1., 0.75);
+	createShapeEnd();
 
+	createShapeBegin("snowman");
+		shape("snowman body", 0, 0, 0);
+		shape("snowman hat", 0, 0, 0);
+	createShapeEnd();
+
+	//shape("snowman", 0, 0, 2.0);
 	// SNOWMAN ARMS
 	color(150, 70, 50);
-	rotate(90, 30, 0);
+	// rotate(90, 30 * cos(2 * t), 0);
 	cylinder(-1.6, -1.8, 0.0, 0.2, 1.75);
 	smoothBlendFactor(0.3);
 	smoothSubtractionBegin();
 		smoothBlendFactor(0.1);
 		smoothUnionBegin();
-			rotate(0, 0, 50);
+			// rotate(0, 0, 50 * cos(2 * t));
 			cylinder(1.4f, 2.2f, 2.0f, 0.18f, 1.75f);
-			rotateZ(110);
+			// rotateZ(110 * cos (2 * t));
 			cylinder(3., 3.3, 2.0, 0.07, 0.2);
-			rotateZ(60);
+			// rotateZ(60 * cos(2 * t));
 			cylinder(3.0, 3.5, 2.0, 0.07, 0.2);
-			rotateZ(15);
+			// rotateZ(15 * cos(2 * t));
 			cylinder(2.8, 3.6, 2.0, 0.07, 0.2);
 		smoothUnionEnd();
 		sphere(1.8, 2.7, 2.0, 0.1);
@@ -118,8 +133,9 @@ void user::create() {
 		cylinder(0., -2.0, 0., 0.4, 2.0);
 	createShapeEnd();
 
-	for (int i = 0; i < 5; i++) {
-		shape("tree", -6 + 3.5 * i, 2., 6.);
+	for (int i = 0; i < 10; i++) {
+		rotateY(20);
+		shape("tree", -10 + 2.5 * i + sin(3 * t), 2. + cos(3 * t), 15.);
 	}
 
 	

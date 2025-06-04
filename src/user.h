@@ -10,9 +10,9 @@ struct user {
 	const TimeExpr& current_blend_factor = 0.25f;
 	user(scene* c);
 
-	float current_rot_x = 0.0f;
-	float current_rot_y = 0.0f;
-	float current_rot_z = 0.0f;
+	TimeExpr current_rot_x = 0.0f;
+	TimeExpr current_rot_y = 0.0f;
+	TimeExpr current_rot_z = 0.0f;
 
 	std::shared_ptr <Color> current_color = std::make_shared <Color>(128, 128, 128); 
 	std::shared_ptr <Color> current_light_color = std::make_shared <Color>(255, 255, 255);
@@ -69,7 +69,7 @@ struct user {
 	*/
 	std::shared_ptr<IR::primitive> torus (const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& R, const TimeExpr& r);
 
-	std::shared_ptr<IR::primitive> shape (const std::string& name, float x, float y, float z);
+	std::shared_ptr<IR::primitive> shape (const std::string& name, const TimeExpr& x, const TimeExpr& y, const TimeExpr& z);
 	// CUSTOM SHAPE CREATION
 	void createShapeBegin(const std::string& name);
 	void createShapeEnd();
@@ -124,10 +124,10 @@ struct user {
 	void smoothIntersectionEnd(void);
 
 	// TRANSFORMATION OPERATORS
-	void rotateX(float degs);
-	void rotateY(float degs);
-	void rotateZ(float degs);
-	void rotate(float degs_x, float degs_y, float degs_z);
+	void rotateX(const TimeExpr& degs);
+	void rotateY(const TimeExpr& degs);
+	void rotateZ(const TimeExpr& degs);
+	void rotate(const TimeExpr& degs_x, const TimeExpr& degs_y, const TimeExpr& degs_z);
 
 	/*void translateX(float units);
 	void translateY(float units);

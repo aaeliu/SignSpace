@@ -62,6 +62,7 @@ void printer::print_map() {
     file << "vec4 mapV4(in vec3 p) {" << std::endl;
     file << "   vec4 sdf = vec4 (0., 0., 0., 0.);" << std::endl;
     file << "   vec4 sdf_ = vec4 (0., 0., 0., 0.);" << std::endl;
+    file << "   vec4 sdf_1 = vec4 (0., 0., 0., 0.);" << std::endl;
     file << "   float db;" << std::endl;
     int d = 0;
     int i = 0;
@@ -69,18 +70,12 @@ void printer::print_map() {
         d = p->print(file, d);
         if (i > 0) {
             // union operation is implicit when there are multiple shapes in the scene.
-            if (p->is_custom) {
-                file << "   sdf = opUnion(sdf, sdf_);" << std::endl;
-            }
-            else {
+            if (!p->is_custom) {
                 file << "   sdf = opUnion(sdf, vec4(d" << d << ", " << p->col->print() << "));" << std::endl;
             }
         }
         else {
-            if (p->is_custom) {
-                file << "   sdf = sdf_;" << std::endl;
-            }
-            else {
+            if (!p->is_custom) {
                 file << "   sdf = vec4(d" << d << ", " << p->col->print() << ");" << std::endl;
             }
         }

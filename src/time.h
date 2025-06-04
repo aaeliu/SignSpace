@@ -12,6 +12,7 @@ struct TimeExprNode {
 
 	virtual bool isNum() const = 0;
 	virtual bool isMul() const = 0;
+	virtual bool isZero() const = 0;
 
 	virtual float getMin() const = 0;
 	virtual float getMax() const = 0;
@@ -36,10 +37,6 @@ struct TimeExpr {
 		expr = other.expr;
 	}
 
-	TimeExpr(TimeExpr&& other) noexcept {
-		expr = other.expr;
-	}
-
 	// std::ostream& operator<<(std::ostream& stream);
 	friend std::ostream& operator<<(std::ostream& stream, const TimeExpr& t) {
 		stream << t.expr->str();
@@ -49,7 +46,14 @@ struct TimeExpr {
 	// void print(std::ostream& stream);
 
 	TimeExpr operator=(const TimeExpr& other) const {
+		std::cout << "hwklfadsklfj";
 		return other;
+	}
+
+	TimeExpr& operator=(const TimeExpr& other) {
+		// std::cout << "hwklfadsklfj";
+		expr = other.expr;
+		return *this;
 	}
 
 	TimeExpr operator+(const TimeExpr& other) const;
@@ -78,6 +82,7 @@ struct Add : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return lhs.expr->getMin() + rhs.expr->getMin(); }
 	float getMax() const override { return lhs.expr->getMax() + rhs.expr->getMax(); }
@@ -92,6 +97,7 @@ struct Subtract : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return lhs.expr->getMin() - rhs.expr->getMax(); }
 	float getMax() const override { return lhs.expr->getMax() - rhs.expr->getMin(); }
@@ -106,6 +112,7 @@ struct Neg : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return -t_.expr->getMax(); }
 	float getMax() const override { return -t_.expr->getMin(); }
@@ -120,6 +127,7 @@ struct Div : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return lhs.expr->getMin() / rhs.expr->getMax(); }
 	float getMax() const override { return lhs.expr->getMax() / rhs.expr->getMin(); }
@@ -134,6 +142,7 @@ struct Mul : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return true; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return lhs.expr->getMin() * rhs.expr->getMin(); }
 	float getMax() const override { return lhs.expr->getMax() * rhs.expr->getMax(); }
@@ -147,6 +156,7 @@ struct Sin : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return -1; }
 	float getMax() const override { return 1; }
@@ -164,6 +174,7 @@ struct Cos : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return -1; }
 	float getMax() const override { return 1; }
@@ -180,6 +191,7 @@ struct TimeVariable : public TimeExprNode {
 	std::string  str() const override;
 	bool isNum() const override { return false; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
 
 	float getMin() const override { return 0; }
 	float getMax() const override { return FLT_MAX; }
@@ -192,6 +204,7 @@ struct Num : public TimeExprNode {
 	std::string str() const override;
 	bool isNum() const override { return true; }
 	bool isMul() const override { return false; }
+	bool isZero() const override { return val == 0; }
 
 	float getMin() const override { return val; }
 	float getMax() const override { return val; }

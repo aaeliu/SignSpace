@@ -13,6 +13,16 @@ TimeExpr::TimeExpr(float x) {
 	expr = std::make_shared<Num>(x);
 }
 TimeExpr TimeExpr::operator+(const TimeExpr& other) const {
+	if (other.expr->isNum()) {
+		if (std::static_pointer_cast<Num>(other.expr)->val == 0) {
+			return *this;
+		}
+	}
+	if (expr->isNum()) {
+		if (std::static_pointer_cast<Num>(expr)->val == 0) {
+			return other;
+		}
+	}
 	return TimeExpr(std::make_shared<Add>(*this, other));
 }
 TimeExpr TimeExpr::operator-(const TimeExpr& other) const {
@@ -55,8 +65,14 @@ TimeExpr TimeExpr::operator*(const TimeExpr& other) const {
 				return *this;
 			}
 		}
+		else if (expr->isNum()) {
+			std::shared_ptr<Num> expr1 = std::static_pointer_cast<Num> (expr);
+			std::shared_ptr<Num> expr2 = std::static_pointer_cast<Num> (other.expr);
+			expr1->val *= expr2->val;
+			return *this;
+		}
 		//std::cout << "TEST3\n";
-	}
+	} 
 	return TimeExpr(std::make_shared<Mul>(*this, other));
 }
 
