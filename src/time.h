@@ -73,6 +73,19 @@ inline TimeExpr operator*(float f, const TimeExpr& other) {
 	return (other * f);
 }
 
+struct Num : public TimeExprNode {
+	float val;
+	Num(float v_) : val(v_) {  }
+	~Num() override = default;
+	std::string str() const override;
+	bool isNum() const override { return true; }
+	bool isMul() const override { return false; }
+	bool isZero() const override { return val == 0; }
+
+	float getMin() const override { return val; }
+	float getMax() const override { return val; }
+};
+
 
 struct Add : public TimeExprNode {
 	TimeExpr lhs, rhs;
@@ -164,6 +177,9 @@ struct Sin : public TimeExprNode {
 };
 
 inline TimeExpr sin(const TimeExpr& t) {
+	if (t.expr->isNum()) {
+		return TimeExpr(std::make_shared<Num>(sin(std::static_pointer_cast<Num>(t.expr)->val)));
+	}
 	return TimeExpr(std::make_shared<Sin>(t));
 }
 
@@ -182,7 +198,31 @@ struct Cos : public TimeExprNode {
 };
 
 inline TimeExpr cos(const TimeExpr& t) {
+	if (t.expr->isNum()) {
+		return TimeExpr(std::make_shared<Num>(cos(std::static_pointer_cast<Num>(t.expr)->val)));
+	}
 	return TimeExpr(std::make_shared<Cos>(t));
+}
+
+struct Sqrt : public TimeExprNode {
+	TimeExpr t;
+	Sqrt(const TimeExpr& t_) : t(t_) {}
+	~Sqrt() override = default;
+	std::string  str() const override;
+	bool isNum() const override { return false; }
+	bool isMul() const override { return false; }
+	bool isZero() const override { return false; }
+
+	float getMin() const override { return 0; }
+	float getMax() const override { return FLT_MAX; }
+
+};
+
+inline TimeExpr sqrt(const TimeExpr& t) {
+	if (t.expr->isNum()) {
+		return TimeExpr(std::make_shared<Num>(sqrtf(std::static_pointer_cast<Num>(t.expr)->val)));
+	}
+	return TimeExpr(std::make_shared<Sqrt>(t));
 }
 
 struct TimeVariable : public TimeExprNode {
@@ -197,16 +237,5 @@ struct TimeVariable : public TimeExprNode {
 	float getMax() const override { return FLT_MAX; }
 };
 
-struct Num : public TimeExprNode {
-	float val;
-	Num(float v_) : val(v_) {  }
-	~Num() override = default;
-	std::string str() const override;
-	bool isNum() const override { return true; }
-	bool isMul() const override { return false; }
-	bool isZero() const override { return val == 0; }
 
-	float getMin() const override { return val; }
-	float getMax() const override { return val; }
-};
 extern struct TimeExpr t;

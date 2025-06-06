@@ -3,6 +3,7 @@
 #include "color.h"
 #include <cmath>
 #include <cassert>
+#include "time.h"
 
 namespace IR {
 	
@@ -20,11 +21,11 @@ namespace IR {
 	};
 
 	struct directional_light : public light {
-		float x, y, z; // direction; eg. (0, -1, 0) is downward facing light
-		float i;	   // intensity
-		directional_light(float x_, float y_, float z_, float i_) :  i(i_) {
-			float len = sqrtf(x_ * x_ + y_ * y_ + z_ * z_);
-			assert(len != 0);
+		TimeExpr x, y, z; // direction; eg. (0, -1, 0) is downward facing light
+		TimeExpr i;	   // intensity
+		directional_light(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& i_) :  i(i_) {
+			TimeExpr len = sqrt(x_ * x_ + y_ * y_ + z_ * z_);
+			// assert(len != 0);
 			x = x_ / len;
 			y = y_ / len;
 			z = z_ / len;
@@ -34,10 +35,10 @@ namespace IR {
 	};
 
 	struct point_light : public light {
-		float x, y, z;	// Position
-		float i;		// Intensity
+		TimeExpr x, y, z;	// Position
+		TimeExpr i;		// Intensity
 
-		point_light(float x_, float y_, float z_, float i_) : x(x_), y(y_), z(z_), i(i_) {};
+		point_light(const TimeExpr& x_, const TimeExpr& y_, const TimeExpr& z_, const TimeExpr& i_) : x(x_), y(y_), z(z_), i(i_) {};
 		int print(std::ofstream& f) const override;
 	};
 }

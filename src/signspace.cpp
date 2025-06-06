@@ -17,11 +17,18 @@ void user::create() {
 
 	color(255, 199, 245);
 
-	smoothBlendFactor(0.4);
-	smoothUnionBegin();
-		sphere(0, 1.6, 2, 1.5);
-		torus(0, 0.6, 2, 1.3, 0.5);
-	smoothUnionEnd();
+	smoothBlendFactor(0.3);
+	smoothSubtractionBegin();
+		smoothBlendFactor(0.45);
+		smoothUnionBegin();
+			sphere(0, 1.6, 2, 1.3);
+			sphere(0.8, 1.2, 1.1, 0.6);
+			sphere(-0.8, 1.2, 1.2, 0.8);
+			torus(0, 0.6, 2, 1.3, 0.5);
+		smoothUnionEnd();
+		sphere(0.8, 2.8, 1.4, t);
+		sphere(0.1, 3.0, 1.6, 0.7);
+	smoothSubtractionEnd();
 
 	//sphere(0, 2.7, 2, 1.5);
 

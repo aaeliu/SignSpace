@@ -19,12 +19,20 @@ vec3 rotate_z(vec3 v, float angle) { float ca = cos(angle); float sa = sin(angle
 vec4 mapV4(in vec3 p) {
    vec4 sdf = vec4 (0., 0., 0., 0.);
    float db;
-	float d0 = sdSphere(p - vec3(0.000000, 1.600000, -2.000000), 1.500000);
-	float d1 = sdTorus(p - vec3(0.000000, 0.600000, -2.000000), vec2(1.300000, 0.500000)); 
-	float d2 = opSmoothUnion(d0, d1,0.400000); 
-   sdf = vec4(d2, vec3(1.000000, 0.780392, 0.960784));
-	float d3 = sdCone(rotate_z(p - vec3(0.000000, -1.500000, -2.000000),3.141593), 1.000000, 4.000000); 
-   sdf = opUnion(sdf, vec4(d3, vec3(0.670588, 0.498039, 0.349020)));
+	float d0 = sdSphere(p - vec3(0.000000, 1.600000, -2.000000), 1.300000);
+	float d1 = sdSphere(p - vec3(0.800000, 1.200000, -1.100000), 0.600000);
+	float d2 = opSmoothUnion(d0, d1,0.450000); 
+	float d3 = sdSphere(p - vec3(-0.800000, 1.200000, -1.200000), 0.800000);
+	float d4 = opSmoothUnion(d2, d3,0.450000); 
+	float d5 = sdTorus(p - vec3(0.000000, 0.600000, -2.000000), vec2(1.300000, 0.500000)); 
+	float d6 = opSmoothUnion(d4, d5,0.450000); 
+	float d7 = sdSphere(p - vec3(0.800000, 2.800000, -1.400000), time);
+	float d8 = opSmoothSubtraction(d6, d7,0.300000); 
+	float d9 = sdSphere(p - vec3(0.100000, 3.000000, -1.600000), 0.700000);
+	float d10 = opSmoothSubtraction(d8, d9,0.300000); 
+   sdf = vec4(d10, vec3(1.000000, 0.780392, 0.960784));
+	float d11 = sdCone(rotate_z(p - vec3(0.000000, -1.500000, -2.000000),3.141593), 1.000000, 4.000000); 
+   sdf = opUnion(sdf, vec4(d11, vec3(0.670588, 0.498039, 0.349020)));
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
@@ -78,17 +86,17 @@ vec3 render(in vec3 ro, in vec3 rd)  {
        vec3 L, CL, distL;
        float LdotN, shadL, falloffL;
        col += 0.400000 * Cd;
-	L = vec3(-0, 0.928477, 0.371391);
-	CL = 0.7 * vec3(1.000000, 1.000000, 1.000000);
+	L = vec3(0.000000, 0.928477, 0.148556);
+	CL = 0.700000 * vec3(1.000000, 1.000000, 1.000000);
 	LdotN = clamp(dot(L, N), 0., 1.);
 	shadL = shadow(p, L, 0.01, 1.0);
 	col += Cd * CL * LdotN * shadL;
-	distL = vec3(2, 3, -1) - p;
+	distL = vec3(2.000000, 3.000000, -1.000000) - p;
 	L = normalize ( distL );
 	shadL = shadow(p, L, 0.01, length(distL));
 	falloffL = dot(distL, distL);
 	falloffL *= falloffL; 
-	CL = 0.5 * vec3(1.000000, 0.866667, 0.549020)/falloffL;
+	CL = 0.500000 * vec3(1.000000, 0.866667, 0.549020)/falloffL;
 	LdotN = clamp(dot(L, N), 0., 1.);
 	col += Cd * CL * LdotN * shadL;
    return col;}

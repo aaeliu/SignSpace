@@ -14,8 +14,13 @@ TimeExpr::TimeExpr(float x) {
 }
 TimeExpr TimeExpr::operator+(const TimeExpr& other) const {
 	if (other.expr->isNum()) {
+		float other_val = std::static_pointer_cast<Num>(other.expr)->val;
 		if (std::static_pointer_cast<Num>(other.expr)->val == 0) {
 			return *this;
+		}
+		if (expr->isNum()) {
+			float this_val = std::static_pointer_cast<Num>(expr)->val;
+			return TimeExpr(std::make_shared<Num>(other_val + this_val));
 		}
 	}
 	if (expr->isNum()) {
@@ -44,6 +49,9 @@ TimeExpr TimeExpr::operator/(const TimeExpr& other) const {
 }
 
 TimeExpr TimeExpr::operator-() const {
+	if (expr->isNum()) {
+		return TimeExpr(std::make_shared<Num>(-1 * std::static_pointer_cast<Num>(expr)->val));
+	}
 	return TimeExpr(std::make_shared<Neg>(*this));
 }
 
@@ -108,6 +116,11 @@ std::string Sin::str() const {
 
 std::string Cos::str() const {
 	return "cos(" + t.expr->str() + ")";
+
+}
+
+std::string Sqrt::str() const {
+	return "sqrt(" + t.expr->str() + ")";
 
 }
 

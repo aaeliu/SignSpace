@@ -139,13 +139,13 @@ struct user {
 	/* directional light constructor
 	* x, y, z: direction light points. ie (0, -1, 0) is a downward pointing light
 	* i: directional light intensity. */
-	void directionalLight(float x, float y, float z, float i);
+	void directionalLight(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& i);
 
 	/* point light
 	*  x, y, z: location of point light
 	*  i: point light intensity
 	*/
-	void pointLight(float x, float y, float z, float i);
+	void pointLight(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& i);
 
 	
 

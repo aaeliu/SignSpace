@@ -305,7 +305,7 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 
 int IR::directional_light::print(std::ofstream& f) const {
 
-	f << "	L = vec3(" << -x << ", " << -y << ", " << -z << ");" << std::endl;
+	f << "	L = vec3(" << x << ", " << y << ", " << z << ");" << std::endl;
 	f << "	CL = " << i << " * " << col->print() << ";" << std::endl;
 	f << "	LdotN = clamp(dot(L, N), 0., 1.);" << std::endl;
 	f << "	shadL = shadow(p, L, 0.01, 1.0);" << std::endl;

@@ -171,13 +171,13 @@ void user::smoothIntersectionEnd(void) {
 
 // LIGHTSSS
 
-void user::directionalLight(float x, float y, float z, float i) {
+void user::directionalLight(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& i) {
 	std::shared_ptr<IR::directional_light> new_light = std::make_shared<IR::directional_light>(x, y, -z, i);
 	new_light->col = current_light_color;
 	context->lights.push_back(new_light);
 }
 
-void user::pointLight(float x, float y, float z, float i) {
+void user::pointLight(const TimeExpr& x, const TimeExpr& y, const TimeExpr& z, const TimeExpr& i) {
 	std::shared_ptr<IR::point_light> new_light = std::make_shared<IR::point_light>(x, y, -z, i);
 	new_light->col = current_light_color;
 	context->lights.push_back(new_light);
