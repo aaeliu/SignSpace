@@ -19,8 +19,8 @@ std::string IR::primitive::print_center_with_rotations() const {
 	return c;
 }
 
-std::string IR::primitive::print_center_with_transform(std::string t) const {
-	std::string c = t + " - " + print_vec3(x, y, z);
+std::string IR::primitive::print_center_with_transform(int t) const {
+	std::string c = "t" + std::to_string(t) + " - " + print_vec3(x, y, z);
 	if (rot_z.has_value()) {
 		c = "rotate_z(" + c + "," + rot_z.value().expr->str() + ")";
 	}
@@ -67,7 +67,7 @@ int IR::smooth_union::print(std::ofstream& f, int d) const {
 		const auto& shape = shapes[i];
 		d1 = shape->print(f, d0 + 1);
 		d2 = d1 + 1;
-
+		std::cout << "blend_factor: " << blend_factor << std::endl;
 		f << "	float d" << d2 << " = opSmoothUnion(d" << d0 << ", d" << d1 << "," << blend_factor << "); " << std::endl;
 		d0 = d2;
 	}
@@ -136,29 +136,29 @@ int IR::smooth_intersection::print(std::ofstream& f, int d) const {
 
 // print WITH translation
 
-int IR::sphere::print(std::ofstream& f, int d, std::string t) const {
+int IR::sphere::print(std::ofstream& f, int d, int t) const {
 	f << "	float d" << d << " = sdSphere(" << print_center_with_transform(t) << ", " << r << ");" << std::endl;
 	return d;
 }
 
-int IR::box::print(std::ofstream& f, int d, std::string t) const {
+int IR::box::print(std::ofstream& f, int d, int t) const {
 	f << "	float d" << d << " = sdBox(" << print_center_with_transform(t) << ", " << print_vec3(l, w, h) << "); " << std::endl;
 	return d;
 }
-int IR::cone::print(std::ofstream& f, int d, std::string t) const {
+int IR::cone::print(std::ofstream& f, int d, int t) const {
 	f << "	float d" << d << " = sdCone(" << print_center_with_transform(t) << ", " << r << ", " << h << "); " << std::endl;
 	return d;
 }
-int IR::torus::print(std::ofstream& f, int d, std::string t) const {
+int IR::torus::print(std::ofstream& f, int d, int t) const {
 	f << "	float d" << d << " = sdTorus(" << print_center_with_transform(t) << ", vec2(" << R << ", " << r << ")); " << std::endl;
 	return d;
 }
 
-int IR::cylinder::print(std::ofstream& f, int d, std::string t) const {
+int IR::cylinder::print(std::ofstream& f, int d, int t) const {
 	f << "	float d" << d << " = sdCylinder(" << print_center_with_transform(t) << ", " << r << ", " << h << "); " << std::endl;
 	return d;
 }
-int IR::smooth_union::print(std::ofstream& f, int d, std::string t) const {
+int IR::smooth_union::print(std::ofstream& f, int d, int t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -173,7 +173,7 @@ int IR::smooth_union::print(std::ofstream& f, int d, std::string t) const {
 	return d2;
 }
 
-int IR::subtraction::print(std::ofstream& f, int d, std::string t) const {
+int IR::subtraction::print(std::ofstream& f, int d, int t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -189,7 +189,7 @@ int IR::subtraction::print(std::ofstream& f, int d, std::string t) const {
 }
 
 
-int IR::smooth_subtraction::print(std::ofstream& f, int d, std::string t) const {
+int IR::smooth_subtraction::print(std::ofstream& f, int d, int t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -204,7 +204,7 @@ int IR::smooth_subtraction::print(std::ofstream& f, int d, std::string t) const 
 	return d2;
 }
 
-int IR::intersection::print(std::ofstream& f, int d, std::string t) const {
+int IR::intersection::print(std::ofstream& f, int d, int t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -220,7 +220,7 @@ int IR::intersection::print(std::ofstream& f, int d, std::string t) const {
 }
 
 
-int IR::smooth_intersection::print(std::ofstream& f, int d, std::string t) const {
+int IR::smooth_intersection::print(std::ofstream& f, int d, int t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -235,8 +235,8 @@ int IR::smooth_intersection::print(std::ofstream& f, int d, std::string t) const
 	return d2;
 }
 
-int IR::custom_shape::print(std::ofstream& f, int d, std::string t) const {
-	f << "db = sdSphere( " << t << ", " << bounding_rad << ");" << std::endl;
+int IR::custom_shape::print(std::ofstream& f, int d, int t) const {
+	f << "db = sdSphere( t" << t << ", " << bounding_rad << ");" << std::endl;
 	f << "if (db < 1.0) {" << std::endl;
 
 	d = (*shapes)[0]->print(f, d, t);
@@ -280,7 +280,7 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 	// f << "sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));";
 	f << "if (db < 1.0) {" << std::endl;
 
-	d = (*shapes)[0]->print(f, d, t);
+	d = (*shapes)[0]->print(f, d, t_count);
 	if (!(*shapes)[0]->is_custom) {
 		if (d == 0) {
 			f << "   sdf = vec4(d" << d << ", " << (*shapes)[0]->col->print() << ");" << std::endl;
@@ -292,7 +292,7 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 
 	for (int i = 1; i < (*shapes).size(); i++) {
 		const auto& shape = (*shapes)[i];
-		d = shape->print(f, d + 1, t);
+		d = shape->print(f, d + 1, t_count);
 
 		if (!shape->is_custom) {
 			f << "	sdf " << " = opUnion(sdf" << ", vec4(d" << d << ", " << shape->col->print() << ")); " << std::endl;

@@ -61,8 +61,6 @@ void printer::print_raymarch (int steps) {
 void printer::print_map() {
     file << "vec4 mapV4(in vec3 p) {" << std::endl;
     file << "   vec4 sdf = vec4 (0., 0., 0., 0.);" << std::endl;
-    file << "   vec4 sdf_ = vec4 (0., 0., 0., 0.);" << std::endl;
-    file << "   vec4 sdf_1 = vec4 (0., 0., 0., 0.);" << std::endl;
     file << "   float db;" << std::endl;
     int d = 0;
     int i = 0;

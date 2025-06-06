@@ -7,7 +7,7 @@ struct user {
 	scene* context;
 	std::vector <std::shared_ptr<IR::primitive>> objects_temp;
 	std::map <std::string, std::shared_ptr<IR::custom_shape>> custom_shapes;
-	const TimeExpr& current_blend_factor = 0.25f;
+	TimeExpr current_blend_factor = 0.25f;
 	user(scene* c);
 
 	TimeExpr current_rot_x = 0.0f;

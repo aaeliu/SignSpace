@@ -90,13 +90,16 @@ std::shared_ptr<IR::primitive> user::cylinder(const TimeExpr& x, const TimeExpr&
 }
 
 void user::smoothBlendFactor(const TimeExpr& k) {
+	std::cout << "smoothblendFactor(): " << k << std::endl;
 	current_blend_factor = k;
+	std::cout << "current_blend_factor" << current_blend_factor << std::endl;
 }
 
 std::shared_ptr <IR::combination> user::smoothUnionBegin() {
 	std::shared_ptr<IR::smooth_union> s = std::make_shared<IR::smooth_union>();
 	_default_prim_construct(s);
 	s->blend_factor = current_blend_factor;
+	std::cout << "s->blend_factor: " << s->blend_factor << std::endl;
 	combination_stack.push(s);
 	return s;
 }
