@@ -6,11 +6,7 @@
 int custom_shape_counter = 0;
 
 std::string IR::primitive::print_center_with_rotations() const {
-	return print_center_with_transform(0, 0, 0);
-}
-
-std::string IR::primitive::print_center_with_transform(int t) const {
-	std::string c = "rotate_x(p - t" + std::to_string(t) + ", sin(time))"  + "- " + print_vec3(x, y, z);
+	std::string c = "p - " + print_vec3(x, y, z);
 	if (rot_z.has_value()) {
 		c = "rotate_z(" + c + "," + rot_z.value().expr->str() + ")";
 	}
@@ -23,8 +19,8 @@ std::string IR::primitive::print_center_with_transform(int t) const {
 	return c;
 }
 
-std::string IR::primitive::print_center_with_transform(const TimeExpr& tx, const TimeExpr& ty, const TimeExpr& tz) const {
-	std::string c = "p - " + print_vec3(x + tx, y + ty, z + tz);
+std::string IR::primitive::print_center_with_transform(std::string t) const {
+	std::string c = t + " - " + print_vec3(x, y, z);
 	if (rot_z.has_value()) {
 		c = "rotate_z(" + c + "," + rot_z.value().expr->str() + ")";
 	}
@@ -35,14 +31,6 @@ std::string IR::primitive::print_center_with_transform(const TimeExpr& tx, const
 		c = "rotate_x(" + c + "," + rot_x.value().expr->str() + ")";
 	}
 	return c;
-}
-
-std::string IR::primitive::print_center_with_transform(const TimeExpr& tx, const TimeExpr& ty, const TimeExpr& tz,
-															const std::optional<TimeExpr>& rx,
-															const std::optional<TimeExpr>& ry,
-															const std::optional<TimeExpr>& rz) const {
-	return "";
-
 }
 
 int IR::sphere::print(std::ofstream& f, int d) const {
@@ -148,29 +136,29 @@ int IR::smooth_intersection::print(std::ofstream& f, int d) const {
 
 // print WITH translation
 
-int IR::sphere::print(std::ofstream& f, int d, int t) const {
+int IR::sphere::print(std::ofstream& f, int d, std::string t) const {
 	f << "	float d" << d << " = sdSphere(" << print_center_with_transform(t) << ", " << r << ");" << std::endl;
 	return d;
 }
 
-int IR::box::print(std::ofstream& f, int d, int t) const {
+int IR::box::print(std::ofstream& f, int d, std::string t) const {
 	f << "	float d" << d << " = sdBox(" << print_center_with_transform(t) << ", " << print_vec3(l, w, h) << "); " << std::endl;
 	return d;
 }
-int IR::cone::print(std::ofstream& f, int d, int t) const {
+int IR::cone::print(std::ofstream& f, int d, std::string t) const {
 	f << "	float d" << d << " = sdCone(" << print_center_with_transform(t) << ", " << r << ", " << h << "); " << std::endl;
 	return d;
 }
-int IR::torus::print(std::ofstream& f, int d, int t) const {
+int IR::torus::print(std::ofstream& f, int d, std::string t) const {
 	f << "	float d" << d << " = sdTorus(" << print_center_with_transform(t) << ", vec2(" << R << ", " << r << ")); " << std::endl;
 	return d;
 }
 
-int IR::cylinder::print(std::ofstream& f, int d, int t) const {
+int IR::cylinder::print(std::ofstream& f, int d, std::string t) const {
 	f << "	float d" << d << " = sdCylinder(" << print_center_with_transform(t) << ", " << r << ", " << h << "); " << std::endl;
 	return d;
 }
-int IR::smooth_union::print(std::ofstream& f, int d, int t) const {
+int IR::smooth_union::print(std::ofstream& f, int d, std::string t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -185,7 +173,7 @@ int IR::smooth_union::print(std::ofstream& f, int d, int t) const {
 	return d2;
 }
 
-int IR::subtraction::print(std::ofstream& f, int d, int t) const {
+int IR::subtraction::print(std::ofstream& f, int d, std::string t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -201,7 +189,7 @@ int IR::subtraction::print(std::ofstream& f, int d, int t) const {
 }
 
 
-int IR::smooth_subtraction::print(std::ofstream& f, int d, int t) const {
+int IR::smooth_subtraction::print(std::ofstream& f, int d, std::string t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -216,7 +204,7 @@ int IR::smooth_subtraction::print(std::ofstream& f, int d, int t) const {
 	return d2;
 }
 
-int IR::intersection::print(std::ofstream& f, int d, int t) const {
+int IR::intersection::print(std::ofstream& f, int d, std::string t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -232,7 +220,7 @@ int IR::intersection::print(std::ofstream& f, int d, int t) const {
 }
 
 
-int IR::smooth_intersection::print(std::ofstream& f, int d, int t) const {
+int IR::smooth_intersection::print(std::ofstream& f, int d, std::string t) const {
 	int d0, d1, d2;
 	d0 = shapes[0]->print(f, d, t);
 	d2 = d0;
@@ -247,8 +235,8 @@ int IR::smooth_intersection::print(std::ofstream& f, int d, int t) const {
 	return d2;
 }
 
-int IR::custom_shape::print(std::ofstream& f, int d, int t) const {
-	f << "db = sdSphere(p -" << print_center() << ", " << bounding_rad << ");" << std::endl;
+int IR::custom_shape::print(std::ofstream& f, int d, std::string t) const {
+	f << "db = sdSphere( " << t << ", " << bounding_rad << ");" << std::endl;
 	f << "if (db < 1.0) {" << std::endl;
 
 	d = (*shapes)[0]->print(f, d, t);
@@ -275,10 +263,21 @@ int IR::custom_shape::print(std::ofstream& f, int d, int t) const {
 
 int IR::custom_shape::print(std::ofstream& f, int d) const {
 
-	int t = custom_shape_counter++;
-	f << "vec3 t" << t << " = " << print_center() << ";" << std::endl;
-	f << "db = sdSphere(p - t" << t << ", " << bounding_rad << ");" << std::endl;
-	f << "sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));";
+	int t_count = custom_shape_counter++;
+	std::string t = "p - " + print_center();
+	if (rot_z.has_value()) {
+		t = "rotate_z(" + t + "," + rot_z.value().expr->str() + ")";
+	}
+	if (rot_y.has_value()) {
+		t = "rotate_y(" + t + "," + rot_y.value().expr->str() + ")";
+	}
+	if (rot_x.has_value()) {
+		t = "rotate_x(" + t + "," + rot_x.value().expr->str() + ")";
+	}
+
+	f << "vec3 t" << t_count << " = " << t << ";" << std::endl;
+	f << "db = sdSphere(p - " << print_center() << ", " << bounding_rad << ");" << std::endl;
+	// f << "sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));";
 	f << "if (db < 1.0) {" << std::endl;
 
 	d = (*shapes)[0]->print(f, d, t);
@@ -300,6 +299,7 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 		}
 	}
 	f << "}" << std::endl;
+	f << "else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }" << std::endl;
 	return d;
 }
 

@@ -17,7 +17,7 @@ namespace IR {
 
 		virtual int print(std::ofstream& f, int n) const = 0;
 		// Print with translation
-		virtual int print(std::ofstream& f, int n, int t) const = 0;
+		virtual int print(std::ofstream& f, int n, std::string t) const = 0;
 
 		float get_dist() const {
 			float x_max = x.expr->getMax();
@@ -49,12 +49,7 @@ namespace IR {
 			return print_vec3(x, y, z);
 		}
 		std::string print_center_with_rotations() const;
-		std::string print_center_with_transform(const TimeExpr& tx, const TimeExpr& ty, const TimeExpr& tz) const;
-		std::string print_center_with_transform(int t) const;
-		std::string print_center_with_transform(const TimeExpr& tx, const TimeExpr& ty, const TimeExpr& tz,
-												const std::optional<TimeExpr>& rx, 
-												const std::optional<TimeExpr>& ry, 
-												const std::optional<TimeExpr>& rz) const;
+		std::string print_center_with_transform(std::string t) const;
 
 	};
 
@@ -65,7 +60,7 @@ namespace IR {
 		float get_bounding_rad() const override;
 		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct box : public primitive {
@@ -75,7 +70,7 @@ namespace IR {
 		float get_bounding_rad() const override;
 		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct cone : public primitive {
@@ -84,7 +79,7 @@ namespace IR {
 		float get_bounding_rad() const override;
 		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct torus : public primitive {
@@ -93,7 +88,7 @@ namespace IR {
 		float get_bounding_rad() const override;
 		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct cylinder : public primitive {
@@ -102,7 +97,7 @@ namespace IR {
 		float get_bounding_rad() const override;
 		float get_bounding_dist() const override { return get_dist() + get_bounding_rad(); }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 
@@ -135,7 +130,7 @@ namespace IR {
 		smooth_union() : combination() { }
 		comb_type get_comb_type() const override  { return comb_type::SMOOTH_UNION; }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	// if we have subtraction on a, b, c, d, e... result is a - b - c - d - e
@@ -143,7 +138,7 @@ namespace IR {
 		subtraction() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct smooth_subtraction : public combination {
@@ -151,14 +146,14 @@ namespace IR {
 		smooth_subtraction() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_SUBTRACTION; }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct intersection : public combination {
 		intersection() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct smooth_intersection : public combination {
@@ -166,7 +161,7 @@ namespace IR {
 		smooth_intersection() : combination() {}
 		comb_type get_comb_type() const override { return comb_type::SMOOTH_INTERSECTION; }
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 
 	struct custom_shape : public primitive {
@@ -189,6 +184,6 @@ namespace IR {
 		void generate_bounding_sphere ();
 
 		int print(std::ofstream& f, int n) const override;
-		int print(std::ofstream& f, int n, int t) const override;
+		int print(std::ofstream& f, int n, std::string t) const override;
 	};
 }

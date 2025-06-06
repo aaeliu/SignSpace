@@ -31,140 +31,171 @@ vec4 mapV4(in vec3 p) {
    sdf = opUnion(sdf, vec4(d3, vec3(0.039216, 0.039216, 0.039216)));
 	float d4 = sdSphere(p - vec3(-0.750000, 3.100000, -1.150000), 0.120000);
    sdf = opUnion(sdf, vec4(d4, vec3(0.039216, 0.039216, 0.039216)));
-	float d5 = sdCylinder(rotate_z(p - vec3(-1.600000, -1.800000, -0.000000),-0.261799), 0.200000, 1.750000); 
-   sdf = opUnion(sdf, vec4(d5, vec3(0.588235, 0.274510, 0.196078)));
-	float d6 = sdCylinder(rotate_z(p - vec3(1.400000, 2.200000, -2.000000),-0.261799), 0.180000, 1.750000); 
-	float d7 = sdCylinder(rotate_z(p - vec3(3.000000, 3.300000, -2.000000),-0.261799), 0.070000, 0.200000); 
-	float d8 = opSmoothUnion(d6, d7,0.250000); 
-	float d9 = sdCylinder(rotate_z(p - vec3(3.000000, 3.500000, -2.000000),-0.261799), 0.070000, 0.200000); 
-	float d10 = opSmoothUnion(d8, d9,0.250000); 
-	float d11 = sdCylinder(rotate_z(p - vec3(2.800000, 3.600000, -2.000000),-0.261799), 0.070000, 0.200000); 
-	float d12 = opSmoothUnion(d10, d11,0.250000); 
-	float d13 = sdSphere(p - vec3(1.800000, 2.700000, -2.000000), 0.100000);
-	float d14 = opSmoothSubtraction(d12, d13,0.250000); 
-	float d15 = sdSphere(p - vec3(2.500000, 3.300000, -2.000000), 0.130000);
-	float d16 = opSmoothSubtraction(d14, d15,0.250000); 
-   sdf = opUnion(sdf, vec4(d16, vec3(0.588235, 0.274510, 0.196078)));
-vec3 t0 = vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t0, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d17 = sdCone(rotate_x(p - t0, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d18 = sdCone(rotate_x(p - t0, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+vec3 t0 = rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799);
+db = sdSphere(p - vec3(0.000000, 0.000000, -(2.000000)), 5.88396);
+if (db < 1.0) {
+db = sdSphere( rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799), 4.21403);
+if (db < 1.0) {
+	float d5 = sdSphere(rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799) - vec3(0.000000, -0.750000, -0.000000), 2.000000);
+	float d6 = sdSphere(rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799) - vec3(-0.150000, 1.250000, -0.000000), 1.500000);
+	float d7 = opSmoothUnion(d5, d6,0.250000); 
+	float d8 = sdSphere(rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799) - vec3((sin(time)*-0.300000), 3.200000, -0.000000), 1.000000);
+	float d9 = opSmoothUnion(d7, d8,0.250000); 
+	sdf  = opUnion(sdf, vec4(d9, vec3(0.901961, 0.901961, 0.941176))); 
+}
+db = sdSphere( rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799), 5.88396);
+if (db < 1.0) {
+	float d10 = sdCylinder(rotate_z(rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799) - vec3(-0.400000, 3.800000, -0.000000),-0.261799), 1.250000, 0.100000); 
+	sdf  = opUnion(sdf, vec4(d10, vec3(0.078431, 0.078431, 0.078431))); 
+	float d11 = sdCylinder(rotate_z(rotate_z(p - vec3(0.000000, 0.000000, -(2.000000)),-0.261799) - vec3(-0.560000, 4.600000, -0.000000),-0.261799), 1.000000, 0.750000); 
+	sdf  = opUnion(sdf, vec4(d11, vec3(0.078431, 0.078431, 0.078431))); 
+}
+}
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+	float d12 = sdCylinder(rotate_z(p - vec3(-1.600000, -1.800000, -0.000000),-0.261799), 0.200000, 1.750000); 
+   sdf = opUnion(sdf, vec4(d12, vec3(0.588235, 0.274510, 0.196078)));
+	float d13 = sdCylinder(rotate_z(p - vec3(1.400000, 2.200000, -2.000000),-0.261799), 0.180000, 1.750000); 
+	float d14 = sdCylinder(rotate_z(p - vec3(3.000000, 3.300000, -2.000000),-0.261799), 0.070000, 0.200000); 
+	float d15 = opSmoothUnion(d13, d14,0.250000); 
+	float d16 = sdCylinder(rotate_z(p - vec3(3.000000, 3.500000, -2.000000),-0.261799), 0.070000, 0.200000); 
+	float d17 = opSmoothUnion(d15, d16,0.250000); 
+	float d18 = sdCylinder(rotate_z(p - vec3(2.800000, 3.600000, -2.000000),-0.261799), 0.070000, 0.200000); 
 	float d19 = opSmoothUnion(d17, d18,0.250000); 
-	float d20 = sdCone(rotate_x(p - t0, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d21 = opSmoothUnion(d19, d20,0.250000); 
-	sdf  = opUnion(sdf, vec4(d21, vec3(0.274510, 0.623529, 0.274510))); 
-	float d22 = sdCylinder(rotate_x(p - t0, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d22, vec3(0.588235, 0.274510, 0.196078))); 
+	float d20 = sdSphere(p - vec3(1.800000, 2.700000, -2.000000), 0.100000);
+	float d21 = opSmoothSubtraction(d19, d20,0.250000); 
+	float d22 = sdSphere(p - vec3(2.500000, 3.300000, -2.000000), 0.130000);
+	float d23 = opSmoothSubtraction(d21, d22,0.250000); 
+   sdf = opUnion(sdf, vec4(d23, vec3(0.588235, 0.274510, 0.196078)));
+vec3 t1 = p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000));
+db = sdSphere(p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d24 = sdCone(p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000)) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d25 = sdCone(p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000)) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d26 = opSmoothUnion(d24, d25,0.250000); 
+	float d27 = sdCone(p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000)) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d28 = opSmoothUnion(d26, d27,0.250000); 
+	sdf  = opUnion(sdf, vec4(d28, vec3(0.274510, 0.623529, 0.274510))); 
+	float d29 = sdCylinder(p - vec3((sin((time*3.000000))+-10.000000), (cos((time*3.000000))+2.000000), -(15.000000)) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d29, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t1 = vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t1, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d23 = sdCone(rotate_x(p - t1, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d24 = sdCone(rotate_x(p - t1, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d25 = opSmoothUnion(d23, d24,0.250000); 
-	float d26 = sdCone(rotate_x(p - t1, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d27 = opSmoothUnion(d25, d26,0.250000); 
-	sdf  = opUnion(sdf, vec4(d27, vec3(0.274510, 0.623529, 0.274510))); 
-	float d28 = sdCylinder(rotate_x(p - t1, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d28, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t2 = rotate_x(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),0.349066);
+db = sdSphere(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d30 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),0.349066) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d31 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),0.349066) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d32 = opSmoothUnion(d30, d31,0.250000); 
+	float d33 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),0.349066) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d34 = opSmoothUnion(d32, d33,0.250000); 
+	sdf  = opUnion(sdf, vec4(d34, vec3(0.274510, 0.623529, 0.274510))); 
+	float d35 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+-7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),0.349066) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d35, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t2 = vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t2, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d29 = sdCone(rotate_x(p - t2, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d30 = sdCone(rotate_x(p - t2, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d31 = opSmoothUnion(d29, d30,0.250000); 
-	float d32 = sdCone(rotate_x(p - t2, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d33 = opSmoothUnion(d31, d32,0.250000); 
-	sdf  = opUnion(sdf, vec4(d33, vec3(0.274510, 0.623529, 0.274510))); 
-	float d34 = sdCylinder(rotate_x(p - t2, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d34, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t3 = rotate_x(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),0.698132);
+db = sdSphere(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d36 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),0.698132) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d37 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),0.698132) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d38 = opSmoothUnion(d36, d37,0.250000); 
+	float d39 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),0.698132) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d40 = opSmoothUnion(d38, d39,0.250000); 
+	sdf  = opUnion(sdf, vec4(d40, vec3(0.274510, 0.623529, 0.274510))); 
+	float d41 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+-5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),0.698132) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d41, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t3 = vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t3, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d35 = sdCone(rotate_x(p - t3, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d36 = sdCone(rotate_x(p - t3, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d37 = opSmoothUnion(d35, d36,0.250000); 
-	float d38 = sdCone(rotate_x(p - t3, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d39 = opSmoothUnion(d37, d38,0.250000); 
-	sdf  = opUnion(sdf, vec4(d39, vec3(0.274510, 0.623529, 0.274510))); 
-	float d40 = sdCylinder(rotate_x(p - t3, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d40, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t4 = rotate_x(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.047198);
+db = sdSphere(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d42 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.047198) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d43 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.047198) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d44 = opSmoothUnion(d42, d43,0.250000); 
+	float d45 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.047198) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d46 = opSmoothUnion(d44, d45,0.250000); 
+	sdf  = opUnion(sdf, vec4(d46, vec3(0.274510, 0.623529, 0.274510))); 
+	float d47 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+-2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.047198) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d47, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t4 = vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t4, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d41 = sdCone(rotate_x(p - t4, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d42 = sdCone(rotate_x(p - t4, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d43 = opSmoothUnion(d41, d42,0.250000); 
-	float d44 = sdCone(rotate_x(p - t4, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d45 = opSmoothUnion(d43, d44,0.250000); 
-	sdf  = opUnion(sdf, vec4(d45, vec3(0.274510, 0.623529, 0.274510))); 
-	float d46 = sdCylinder(rotate_x(p - t4, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d46, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t5 = rotate_x(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)),1.396263);
+db = sdSphere(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d48 = sdCone(rotate_x(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)),1.396263) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d49 = sdCone(rotate_x(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)),1.396263) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d50 = opSmoothUnion(d48, d49,0.250000); 
+	float d51 = sdCone(rotate_x(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)),1.396263) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d52 = opSmoothUnion(d50, d51,0.250000); 
+	sdf  = opUnion(sdf, vec4(d52, vec3(0.274510, 0.623529, 0.274510))); 
+	float d53 = sdCylinder(rotate_x(p - vec3(sin((time*3.000000)), (cos((time*3.000000))+2.000000), -(15.000000)),1.396263) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d53, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t5 = vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t5, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d47 = sdCone(rotate_x(p - t5, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d48 = sdCone(rotate_x(p - t5, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d49 = opSmoothUnion(d47, d48,0.250000); 
-	float d50 = sdCone(rotate_x(p - t5, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d51 = opSmoothUnion(d49, d50,0.250000); 
-	sdf  = opUnion(sdf, vec4(d51, vec3(0.274510, 0.623529, 0.274510))); 
-	float d52 = sdCylinder(rotate_x(p - t5, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d52, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t6 = rotate_x(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.745329);
+db = sdSphere(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d54 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.745329) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d55 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.745329) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d56 = opSmoothUnion(d54, d55,0.250000); 
+	float d57 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.745329) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d58 = opSmoothUnion(d56, d57,0.250000); 
+	sdf  = opUnion(sdf, vec4(d58, vec3(0.274510, 0.623529, 0.274510))); 
+	float d59 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+2.500000), (cos((time*3.000000))+2.000000), -(15.000000)),1.745329) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d59, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t6 = vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t6, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d53 = sdCone(rotate_x(p - t6, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d54 = sdCone(rotate_x(p - t6, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d55 = opSmoothUnion(d53, d54,0.250000); 
-	float d56 = sdCone(rotate_x(p - t6, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d57 = opSmoothUnion(d55, d56,0.250000); 
-	sdf  = opUnion(sdf, vec4(d57, vec3(0.274510, 0.623529, 0.274510))); 
-	float d58 = sdCylinder(rotate_x(p - t6, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d58, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t7 = rotate_x(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.094395);
+db = sdSphere(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d60 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.094395) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d61 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.094395) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d62 = opSmoothUnion(d60, d61,0.250000); 
+	float d63 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.094395) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d64 = opSmoothUnion(d62, d63,0.250000); 
+	sdf  = opUnion(sdf, vec4(d64, vec3(0.274510, 0.623529, 0.274510))); 
+	float d65 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+5.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.094395) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d65, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t7 = vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t7, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d59 = sdCone(rotate_x(p - t7, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d60 = sdCone(rotate_x(p - t7, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d61 = opSmoothUnion(d59, d60,0.250000); 
-	float d62 = sdCone(rotate_x(p - t7, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d63 = opSmoothUnion(d61, d62,0.250000); 
-	sdf  = opUnion(sdf, vec4(d63, vec3(0.274510, 0.623529, 0.274510))); 
-	float d64 = sdCylinder(rotate_x(p - t7, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d64, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t8 = rotate_x(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),2.443461);
+db = sdSphere(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d66 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),2.443461) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d67 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),2.443461) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d68 = opSmoothUnion(d66, d67,0.250000); 
+	float d69 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),2.443461) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d70 = opSmoothUnion(d68, d69,0.250000); 
+	sdf  = opUnion(sdf, vec4(d70, vec3(0.274510, 0.623529, 0.274510))); 
+	float d71 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+7.500000), (cos((time*3.000000))+2.000000), -(15.000000)),2.443461) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d71, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t8 = vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t8, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d65 = sdCone(rotate_x(p - t8, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d66 = sdCone(rotate_x(p - t8, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d67 = opSmoothUnion(d65, d66,0.250000); 
-	float d68 = sdCone(rotate_x(p - t8, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d69 = opSmoothUnion(d67, d68,0.250000); 
-	sdf  = opUnion(sdf, vec4(d69, vec3(0.274510, 0.623529, 0.274510))); 
-	float d70 = sdCylinder(rotate_x(p - t8, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d70, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t9 = rotate_x(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.792527);
+db = sdSphere(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d72 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.792527) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d73 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.792527) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d74 = opSmoothUnion(d72, d73,0.250000); 
+	float d75 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.792527) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d76 = opSmoothUnion(d74, d75,0.250000); 
+	sdf  = opUnion(sdf, vec4(d76, vec3(0.274510, 0.623529, 0.274510))); 
+	float d77 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+10.000000), (cos((time*3.000000))+2.000000), -(15.000000)),2.792527) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d77, vec3(0.588235, 0.274510, 0.196078))); 
 }
-vec3 t9 = vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000));
-db = sdSphere(p - t9, 4.03961);
-sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));if (db < 1.0) {
-	float d71 = sdCone(rotate_x(p - t9, sin(time))- vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
-	float d72 = sdCone(rotate_x(p - t9, sin(time))- vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
-	float d73 = opSmoothUnion(d71, d72,0.250000); 
-	float d74 = sdCone(rotate_x(p - t9, sin(time))- vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
-	float d75 = opSmoothUnion(d73, d74,0.250000); 
-	sdf  = opUnion(sdf, vec4(d75, vec3(0.274510, 0.623529, 0.274510))); 
-	float d76 = sdCylinder(rotate_x(p - t9, sin(time))- vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
-	sdf  = opUnion(sdf, vec4(d76, vec3(0.588235, 0.274510, 0.196078))); 
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
+vec3 t10 = rotate_x(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)),3.141593);
+db = sdSphere(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)), 4.03961);
+if (db < 1.0) {
+	float d78 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)),3.141593) - vec3(0.000000, 0.000000, -0.000000), 1.000000, 1.600000); 
+	float d79 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)),3.141593) - vec3(0.000000, -1.000000, -0.000000), 1.400000, 2.000000); 
+	float d80 = opSmoothUnion(d78, d79,0.250000); 
+	float d81 = sdCone(rotate_x(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)),3.141593) - vec3(0.000000, -1.600000, -0.000000), 1.400000, 2.400000); 
+	float d82 = opSmoothUnion(d80, d81,0.250000); 
+	sdf  = opUnion(sdf, vec4(d82, vec3(0.274510, 0.623529, 0.274510))); 
+	float d83 = sdCylinder(rotate_x(p - vec3((sin((time*3.000000))+12.500000), (cos((time*3.000000))+2.000000), -(15.000000)),3.141593) - vec3(0.000000, -2.000000, -0.000000), 0.400000, 2.000000); 
+	sdf  = opUnion(sdf, vec4(d83, vec3(0.588235, 0.274510, 0.196078))); 
 }
+else { sdf = opUnion (sdf, vec4(db, 1.0, 1.0, 1.0)); }
 	 return sdf;
 }
 float map(in vec3 p) { return mapV4(p).x; }
