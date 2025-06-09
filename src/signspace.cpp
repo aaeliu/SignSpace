@@ -15,26 +15,36 @@ void user::create() {
 	directionalLight(0, -1, 0.4, 0.7);
 	background(199, 232, 255);
 
-	color(255, 199, 245);
+	
+	createShapeBegin("ice cream");
+		color(255, 199, 245);
+		smoothBlendFactor(0.3);
+		smoothSubtractionBegin();
+			smoothBlendFactor(0.45);
+			smoothUnionBegin();
+				sphere(0, 1.6, 0, 1.3);
+				sphere(0.8, 1.2, -0.9, 0.6);
+				sphere(-0.8, 1.2, -0.8, 0.8);
+				torus(0, 0.6, 0, 1.3, 0.5);
+			smoothUnionEnd();
+			sphere(0.8, 2.8, -0.6, 0.4);
+			sphere(0.1, 3.0, -0.4, 0.7);
+		smoothSubtractionEnd();
 
-	smoothBlendFactor(0.3);
-	smoothSubtractionBegin();
-		smoothBlendFactor(0.45);
-		smoothUnionBegin();
-			sphere(0, 1.6, 2, 1.3);
-			sphere(0.8, 1.2, 1.1, 0.6);
-			sphere(-0.8, 1.2, 1.2, 0.8);
-			torus(0, 0.6, 2, 1.3, 0.5);
-		smoothUnionEnd();
-		sphere(0.8, 2.8, 1.4, t);
-		sphere(0.1, 3.0, 1.6, 0.7);
-	smoothSubtractionEnd();
+		color(171, 127, 89);
+		rotateZ(180);
+		cone(0, -1.5, 0, 1.0, 2);
+	createShapeEnd();
 
-	//sphere(0, 2.7, 2, 1.5);
+	//rotate(0, 0, 0);
+	//shape("ice cream", 0, 0, 2);
 
-	color(171, 127, 89);
-	rotateZ(180);
-	cone(0, -1.5, 2, 1.0, 2);
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			rotate(i * 45, j * 30, (i + j) * 10);
+			shape("ice cream", -8 + i * 5, -8 + j * 5, 35);
+		}
+	}
 
 	lightColor(255, 221, 140);
 	pointLight(2.0, 3.0, 1.0, 0.5);

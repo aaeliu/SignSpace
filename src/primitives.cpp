@@ -263,6 +263,7 @@ int IR::custom_shape::print(std::ofstream& f, int d, int t) const {
 
 int IR::custom_shape::print(std::ofstream& f, int d) const {
 
+	int init_d = d;
 	int t_count = custom_shape_counter++;
 	std::string t = "p - " + print_center();
 	if (rot_z.has_value()) {
@@ -276,13 +277,12 @@ int IR::custom_shape::print(std::ofstream& f, int d) const {
 	}
 
 	f << "vec3 t" << t_count << " = " << t << ";" << std::endl;
-	f << "db = sdSphere(p - " << print_center() << ", " << bounding_rad << ");" << std::endl;
-	// f << "sdf = opUnion (sdf, vec4(db, 1.0, 0.0, 0.0));";
+	f << "db = 0;";
 	f << "if (db < 1.0) {" << std::endl;
 
 	d = (*shapes)[0]->print(f, d, t_count);
 	if (!(*shapes)[0]->is_custom) {
-		if (d == 0) {
+		if (init_d == 0) {
 			f << "   sdf = vec4(d" << d << ", " << (*shapes)[0]->col->print() << ");" << std::endl;
 		}
 		else {

@@ -84,7 +84,7 @@ struct Num : public TimeExprNode {
 
 	float getMin() const override { return val; }
 	float getMax() const override { return val; }
-};
+}; 
 
 
 struct Add : public TimeExprNode {
